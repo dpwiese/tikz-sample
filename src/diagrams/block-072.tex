@@ -1,0 +1,16 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[roundblock, right of=input1,node distance=2.0cm] (block1){$\begin{bmatrix} \tilde{\theta} \\ \tilde{k} \end{bmatrix}^{\top}$};
+      \node[squareblock, right of=block1,node distance=3.0cm] (block2){$(sI-A_{m})^{-1}b_{p}$};
+      \node[output, right of= block2, node distance=2.5cm](output1){};
+      \draw[vecArrow](input1) -- node[near start]{$\begin{bmatrix}X_{p} \\ r \end{bmatrix}$}  (block1);
+      \draw[->](block1) --  (block2);
+      \draw[vecArrow](block2) -- node[pos=0.6] {$e$} (output1);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

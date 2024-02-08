@@ -1,0 +1,47 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[scale=1, auto, node distance=2cm,>=latex']
+      \matrix[ampersand replacement=\&, row sep=0.5cm, node distance=2.5cm] (regions) at (0,0){
+        \node[block] (R1) {Region 1}; \\
+        \node[block] (R2) {Region 2}; \\
+        \node[block] (R3) {Region 3}; \\
+      };
+      \matrix[ampersand replacement=\&, row sep=0.4cm, right of=R1,node distance=2.5cm] (R1out) {
+        \node [coordinate] (R1outx) {}; \\
+        \node [coordinate] (R1outP) {}; \\
+      };
+      \matrix[ampersand replacement=\&, row sep=0.4cm, right of=R2,node distance=2.5cm] (R2out) {
+        \node [coordinate] (R2outx) {}; \\
+        \node [coordinate] (R2outP) {}; \\
+      };
+      \matrix[ampersand replacement=\&, row sep=0.4cm, right of=R3,node distance=2.5cm] (R3out) {
+        \node [coordinate] (R3outx) {}; \\
+        \node [coordinate] (R3outP) {}; \\
+      };
+      \node [coordinate, left of=R1] (input1) {};
+      \node [coordinate, left of=R2] (input2) {};
+      \node [coordinate, left of=R3] (input3) {};
+      \node [block, right of=R2,node distance=3.5cm,minimum width=2cm, minimum height=4cm] (Q) {Q};
+
+      % Inputs
+      \draw [->] (input1) -- node [near start]{$x$} (R1);
+      \draw [->] (input2) -- node [near start]{$x$} (R2);
+      \draw [->] (input3) -- node [near start]{$x$} (R3);
+
+      % Region 1 outputs
+      \draw [->] (R1.east) + (0cm,0.2cm) -- node [pos=0.5]{$x$} (R1outx);
+      \draw [->] (R1.east) + (0cm,-0.2cm) -- node [pos=0.5]{$P$} (R1outP);
+
+      % Region 2 outputs
+      \draw [->] (R2.east) + (0cm,0.2cm) -- node [pos=0.5]{$x$} (R2outx);
+      \draw [->] (R2.east) + (0cm,-0.2cm) -- node [pos=0.5]{$P$} (R2outP);
+
+      % Region 3 outputs
+      \draw [->] (R3.east) + (0cm,0.2cm) -- node [pos=0.5]{$x$} (R3outx);
+      \draw [->] (R3.east) + (0cm,-0.2cm) -- node [pos=0.5]{$P$} (R3outP);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

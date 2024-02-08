@@ -1,0 +1,65 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.6, every node/.style={transform shape}, node distance=0.1cm, >=latex']
+      \node[input](input1){};
+      \node[gainblockright,right of=input1, node distance=4.0cm, minimum height=0.1cm, minimum width=1.0cm] (block1) {$\Theta_{q_{\text{cmd}}}$};
+      \node[whitesum,right of=block1, node distance=2.5cm] (sum1) {};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, right of=sum1,node distance=2.5cm] (block2) {\shortstack{Short \\ Period}};
+      \node[output, right of=block2,node distance=2.5cm] (output1) {};
+      \node[output, right of=output1,node distance=1.0cm] (output2) {};
+      \node[squareblock, minimum height=1cm, minimum width=1.0cm, right of=output2,node distance=2.0cm] (block6) {$\frac{1}{s}$};
+      \node[output, right of=block6,node distance=2.5cm] (output3) {};
+      \node[gainblockleft, above of=block2,node distance=2.0cm, minimum width=1.0cm](block3){\rotatebox{180}{$\Theta_{\alpha}$}};
+      \node[gainblockleft, above of=block3,node distance=2.0cm, minimum width=1.0cm](block4){\rotatebox{180}{$\Theta_{q}$}};
+
+      % Draw lines
+      \draw[->](input1) -- node[pos=0.4]{$q_{\text{cmd}}$} (block1);
+      \draw[->](block1) -- (sum1);
+      \draw[->](sum1) -- node[pos=0.5]{$\delta_{e}$}(block2);
+      % \draw[vecArrow](block2) -- node[pos=0.8]{$\alpha$, $q$}(output3);
+      \draw[vecArrow](block2) -- (block6);
+      \draw[vecArrow](block6) -- node[pos=0.8]{$\theta$} (output3);
+      \draw[->](output1) |- (block3);
+      \draw[->](output2) |- (block4);
+      \draw[->](block3) -| (sum1);
+      \draw[->](block4) -| (sum1);
+
+      \begin{pgfonlayer}{background}
+        \path (block1 |- block1)+(-1.5,1.2) node (c) {};
+        \path (block4 -| block4)+(4.0,-1.2) node (d) {};
+        \path[fill=gray!40, draw, dashed] (c) rectangle (d);
+      \end{pgfonlayer}
+
+      % Adaptive Arrow
+      \coordinate (arrow1) at ([xshift=-1.0cm,yshift=-1.0cm] block1);
+      \coordinate (arrow2) at (block1.225);
+      \coordinate (arrow3) at (block1.45);
+      \coordinate (arrow4) at ([xshift=1.0cm,yshift=1.0cm] block1);
+      \draw[-](arrow1) -- (arrow2);
+      \draw[->](arrow3) -- (arrow4);
+
+      % Adaptive Arrow
+      \coordinate (arrow1) at ([xshift=-1.0cm,yshift=-1.0cm] block3);
+      \coordinate (arrow2) at (block3.225);
+      \coordinate (arrow3) at (block3.45);
+      \coordinate (arrow4) at ([xshift=1.0cm,yshift=1.0cm] block3);
+      \draw[-](arrow1) -- (arrow2);
+      \draw[->](arrow3) -- (arrow4);
+
+      % Adaptive Arrow
+      \coordinate (arrow1) at ([xshift=-1.0cm,yshift=-1.0cm] block4);
+      \coordinate (arrow2) at (block4.225);
+      \coordinate (arrow3) at (block4.45);
+      \coordinate (arrow4) at ([xshift=1.0cm,yshift=1.0cm] block4);
+      \draw[-](arrow1) -- (arrow2);
+      \draw[->](arrow3) -- (arrow4);
+
+      \node[gainblockleft, above of=block2,node distance=2.0cm, minimum width=1.0cm](block3){\rotatebox{180}{$\Theta_{\alpha}$}};
+      \node[gainblockleft, above of=block3,node distance=2.0cm, minimum width=1.0cm](block4){\rotatebox{180}{$\Theta_{q}$}};
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

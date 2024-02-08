@@ -1,0 +1,15 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}
+  \begin{axis}[%
+      xlabel=$x$,
+      ylabel=$y$]
+    \addplot[smooth, mark=*, blue] plot coordinates {%
+      (0,2)
+      (2,3)
+      (3,1)
+    };
+    \addlegendentry{Case 1}
+  \end{axis}
+\end{tikzpicture}

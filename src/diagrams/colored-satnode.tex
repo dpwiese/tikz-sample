@@ -1,0 +1,14 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    \begin{tikzpicture}
+      \node[satnode,minimum size=1cm,fill=blue,draw] (a) {};
+      \node[satnode,draw,fill=red,minimum height=2cm,minimum width=1 cm] (a2) at (-2,0) {};
+      \node[satnode,thick,draw,minimum height=1cm,minimum width=1.5 cm,fill=yellow] (a1) at (2,0) {};
+      \draw[-latex] (a2) -- (a) -- (a1);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

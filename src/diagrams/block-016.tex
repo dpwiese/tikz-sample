@@ -1,0 +1,38 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    %\resizebox{1.7in}{0.5in}{
+    \begin{tikzpicture}[auto, scale=1.0, every node/.style={transform shape}, node distance=3cm,>=latex']
+      \matrix[ampersand replacement=\&, row sep=1.0cm, node distance=3.0cm] (regions) at (0,0){
+      \node[block, minimum width=2cm, minimum height=1.5cm] (R1) {GHV}; \\
+      };
+      \matrix[ampersand replacement=\&, row sep=1.0cm, right of=R1, node distance=2.0cm] (R1out) {
+      \node [coordinate] (R1outx) {};\\
+      \node [coordinate] (R1outP) {};\\
+      };
+      \node[output, right of=R1outx,node distance=0.5cm](output1){};
+      \node[output, below of=output1,node distance=1.0cm](output2){};
+      %\node [coordinate, left of=R1, node distance=2.0cm] (input1) {};
+      %\node[input, above of=R1outx,node distance=1.0cm](input2){};
+      %draw
+      \draw [->] (input1) -- node [near start]{$u$} (R1);
+      %\draw [->] (input2) -- node [near start]{unknown bias} (R1outx);
+      \draw [->] (R1.east) + (0cm,0.5cm) -- (output1);
+      %\draw [->] (R1outx) -- node [pos=0.9]{} (output1);
+      \draw [->] (R1.east) + (0cm,-0.5cm) -- node [pos=0.95]{} (output2);
+      %cross out
+      \coordinate (arrow1) at ([xshift=-0.4cm,yshift=-0.3cm] output1);
+      \coordinate (arrow2) at ([xshift=0.2cm,yshift=0.3cm] output1);
+      \coordinate (arrow3) at ([xshift=-0.4cm,yshift=0.3cm] output1);
+      \coordinate (arrow4) at ([xshift=0.2cm,yshift=-0.3cm] output1);
+      \draw[-,red,line width=2](arrow1) -- (arrow2);
+      \draw[-,red,line width=2](arrow3) -- (arrow4);
+      \node [right of=output1, node distance = 2.0cm] {$\beta$ unavailable};
+      \node [right of=output2, node distance = 1.8cm] {$y=[\;p\;r\;\phi\;]^{\top}$};
+    \end{tikzpicture}
+    %}
+  \end{center}
+\end{figure}

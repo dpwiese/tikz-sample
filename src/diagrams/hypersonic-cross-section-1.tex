@@ -1,0 +1,82 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}[x=1mm, y=1mm,>=latex,line join=round,font=\Large,auto, scale=1.0, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+  % Place coordinates for everything in the body axes frame that will be rotated
+  \begin{scope}[rotate=-20]
+    \coordinate (o)       at (0,0);
+    \coordinate (A)       at ($(o)+(0,0)$);
+    \coordinate (B)       at ($(A)+(70,20)$);
+    \coordinate (C)       at ($(B)+(70,-20)$);
+    \coordinate (D)       at ($(C)+(-70,-20)$);
+    \coordinate (E)       at ($(D)+(-70,20)$);
+    \coordinate (center)  at ($(B)+(0,-20)$);
+    \coordinate (F)       at ($(center)+(-80,0)$);
+    \coordinate (G)       at ($(center)+(80,0)$);
+    \coordinate (thrust)  at ($(center)+(-50,0)$);
+    \coordinate (cg)      at ($(center)+(-10,0)$);
+    \coordinate (cgnew)   at ($(center)+(-30,0)$);
+    \coordinate (Fminus)  at ($(center)+(-70,0)$);
+  \end{scope}
+
+  % Draw arcs for the angles theta and alpha
+  \draw[-,line width=1pt] (Fminus) arc(160:170:70) ;
+  \draw[-,line width=1pt] (F) arc(160:180:80);
+
+  % Annotate the angles theta and alpha
+  \node at ($(E)+(-4,-5)$) {$\alpha$};
+  \node at ($(F)+(-6,-12)$) {$\theta$};
+
+  % Make the points for horizon and weight vectors
+  \coordinate (hleft)     at ($(center)+(-80,0)$);
+  \coordinate (hright)    at ($(center)+(80,0)$);
+  \coordinate (weight)    at ($(cg)+(0,-30)$);
+  \coordinate (weightnew) at ($(cgnew)+(0,-30)$);
+
+  % Points that will be rotated for stability axes
+  \begin{scope}[rotate=-10]
+    \coordinate (alphafront)  at ($(center)+(-80,0)$);
+    \coordinate (airvelocity) at ($(center)+(-50,0)$);
+    \coordinate (alphaback)   at ($(center)+(80,0)$);
+    \coordinate (lift)        at ($(center)+(0,30)$);
+    \coordinate (drag)        at ($(center)+(50,0)$);
+  \end{scope}
+
+  % Now do the points for CG shift components in stability axes
+  \begin{scope}[rotate=-10]
+    \coordinate (cosadx)      at ($(center)+({-30*cos(10)},0)$);
+    \coordinate (cosadxplus)  at ($(center)+({-30*cos(10)},{10*sin(10)})$);
+  \end{scope}
+
+  % Draw
+  \draw[line width=1pt] (A)-- (B)-- (C)-- (D)-- (E) --cycle;
+  \draw[gray, line width=0.5pt] (F)-- (G) --cycle;
+  \draw[gray, line width=0.5pt] (hleft)-- (hright)--cycle;
+  \draw[gray, line width=0.5pt] (alphafront)-- (alphaback) --cycle;
+  % \draw[gray, line width=0.5pt] (cosadx)-- (cgnew) --cycle;
+  % \draw[gray, line width=0.5pt] (cosadxplus)-- (cg) --cycle;
+  \draw[->,line width=2pt](center) -- node[pos=0.8]{$L$} (lift);
+  \draw[->,line width=2pt](center) -- node[pos=0.8]{$D$} (drag);
+  \draw[->,line width=2pt](center) -- node[pos=0.8]{$T$} node[above,pos=0.4]{$\Delta x$} (thrust);
+  \draw[->,line width=2pt,gray](cg) -- (weight);
+  \draw[->,line width=2pt](cgnew) -- node[pos=0.8]{$W$} (weightnew);
+  \draw[->,line width=2pt](alphafront) -- node[pos=0.5]{$V$} (airvelocity);
+
+  % Place original CG location
+  \coordinate (CC) at ($(cg)+(2,0)$);
+  \coordinate (DD) at ($(cg)+(-2,0)$);
+  \filldraw[black,fill=black] (cg)--(CC) arc (360:270:2) -- cycle;
+  \filldraw[black,fill=white] (cg)--(CC) arc (0:90:2) -- cycle;
+  \filldraw[black,fill=black] (cg)--(DD) arc (180:90:2) -- cycle;
+  \filldraw[black,fill=white] (cg)--(DD) arc (180:270:2) -- cycle;
+  \draw (cg) circle (2);
+
+  % Place new CG location
+  \coordinate (CCnew) at ($(cgnew)+(2,0)$);
+  \coordinate (DDnew) at ($(cgnew)+(-2,0)$);
+  \filldraw[black,fill=black] (cgnew)--(CCnew) arc (360:270:2) -- cycle;
+  \filldraw[black,fill=white] (cgnew)--(CCnew) arc (0:90:2) -- cycle;
+  \filldraw[black,fill=black] (cgnew)--(DDnew) arc (180:90:2) -- cycle;
+  \filldraw[black,fill=white] (cgnew)--(DDnew) arc (180:270:2) -- cycle;
+  \draw (cgnew) circle (2);
+\end{tikzpicture}

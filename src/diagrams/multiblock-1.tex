@@ -1,0 +1,101 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  % \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    % The block diagram code is probably more verbose than necessary
+    \begin{tikzpicture}[scale=1, auto, node distance=2cm,>=latex']
+      % We start by placing the blocks
+      \node [input, name=input] {};
+      \node [block, right of=input] (switch) {SWITCH};
+      \node [modelinput, right of=switch, node distance=3cm] (modelinput){};
+
+      % node placement with matrix library: 5x4 array
+      \matrix[ampersand replacement=\&, row sep=0.2cm, right of=modelinput, node distance=1.5cm] (regions) {
+        \node[block] (R1) {Region 1}; \\
+        \node[block] (R2) {Region 2};\\
+        \node[block] (R3) {Region 3};\\
+        \node[block] (R4) {Region 4};\\
+      };
+
+      \matrix[ampersand replacement=\&, row sep=0.4cm, right of=R1] (R1out) {
+        \node [coordinate] (R1outx) {};\\
+        \node [coordinate] (R1outP) {};\\
+      };
+
+      \matrix[ampersand replacement=\&, row sep=0.4cm, right of=R4] (R4out) {
+        \node [coordinate] (R4outx) {};\\
+        \node [coordinate] (R4outP) {};\\
+      };
+
+      \node [coordinate, right of=regions, node distance = 1cm] (R23) {};
+      \node [coordinate, right of=R23, node distance = 1cm] (R23out) {};
+      \node [sum, right of=R23out] (sum) {};
+      \node [block, right of=sum] (Q) {Q};
+      \node [coordinate, right of=Q] (Qout) {};
+      \node [modeloutput, right of=Qout, node distance=0.5cm] (modeloutput){};
+
+      \matrix[ row sep=2cm, right of=modeloutput, node distance=0] (output) {
+        \node [coordinate] (outputx) {};\\
+        \node [coordinate] (outputP) {};\\
+      };
+
+      \node [coordinate, right of=outputx, node distance=1cm] (outputendx) {};
+      \node [coordinate, right of=outputP, node distance = 1cm] (outputendP) {};
+
+      % Model input connections
+      \draw [draw,->] (input) -- node {$x$} (switch);
+      \draw [->] (switch) -- node {$Region$} (modelinput);
+
+      % Model box
+      \path (modelinput |- R1.north)+(0,0.5) node (a) {};
+      \path (R4.south -| modeloutput)+(0,-1) node (b) {};
+      \path[draw, dashed] (a) rectangle (b);
+      \node [above of=R1, node distance = 1.3cm] {MODEL};
+
+      % Region 1 outputs
+      \draw [->] (R1.east) + (0cm,0.2cm) -- node [right,pos=1]{$x$} (R1outx);
+      \draw [->] (R1.east) + (0cm,-0.2cm) -- node [right,pos=1]{$P$} (R1outP);
+
+      % Region 2 and 3 output
+      \draw (R2.east) -| (R23out);
+      \draw (R3.east) -| (R23out);
+      \draw [->] (R23out) -- node [above] {$P$} (sum) node[above,pos=0.9] {$-$};
+      \draw [->] (sum) --   (Q);
+      \draw [->] (Q) -- node {$x$} (Qout);
+
+      % Region 4 outputs
+      \draw [->](R4.east) + (0cm,0.2cm) -- node [right,pos=1]{$x$} (R4outx);
+      \draw [->] (R4.east) + (0cm,-0.2cm) -- node [right,pos=1]{$P$} (R4outP);
+
+      % Model output connections
+      \draw [->] (outputx) -- node [name=x,right,pos=1] {$x$}(outputendx);
+      \draw [->] (outputP) -- node [right,pos=1] {$P$}(outputendP);
+
+      % Input P_cmd
+      \node [coordinate, below of=R23out, node distance = 4cm] (Pcmd) {};
+      \node [coordinate, below of=R23out, node distance=3cm] (connect) {};
+      \node [coordinate, left of=connect, node distance = 2cm] (R4in) {};
+      \node [coordinate, right of=connect, node distance = 1cm] (sumin) {};
+      \draw (Pcmd) -- (connect) node [below,pos=0] {$P_{cmd}$};
+      \draw (connect) -- (R4in);
+      \draw [->] (R4in) -- (R4.south);
+      \draw (connect) -- (sumin);
+      \draw [->] (sumin) --  (sum) node[pos=0.95,right] {$+$};
+      %\node [coordinate, above of=Pcmd, node distance = 1.1cm] (connect) {};
+
+      % Connect feedback
+      \node [coordinate, above of =R1] (feedback) {};
+      \draw (outputendx)+(-.5cm,0cm) |- (feedback);
+      \draw (feedback) -| (input);
+
+      % \draw [->] (R1) -- node {$x$} (output);
+      % \draw [-] (output) |- (input);
+      % \draw [->] (y) |- (measurements);
+      % \draw [->] (measurements) -| node[pos=0.99] {$-$} 
+      % \node [near end] {$y_m$} (sum);
+      % \draw [model] rectangle (switch) -- (output);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

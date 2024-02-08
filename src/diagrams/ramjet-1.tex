@@ -1,0 +1,54 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}[x=1mm, y=1mm,>=latex,line join=round,font=\small]
+  \coordinate (o) at (0,0);
+
+  % Upper part
+  \coordinate (A) at ($(o)+(0,0)$);
+  \coordinate (B) at ($(A)+(152,0)$);
+  \coordinate (C) at ($(B)+(-35,-12)$);
+  \coordinate (D) at ($(C)+(-35,0)$);
+  \coordinate (E) at ($(D)+(-16,6)$);
+  \coordinate (F) at ($(E)+(-12,3)$);
+
+  % Lower part
+  \coordinate (G) at ($(C)+(28,-10)$);
+  \coordinate (H) at ($(G)+(-30,-2)$);
+  \coordinate (I) at ($(H)+(-35,0)$);
+  \coordinate (J) at ($(I)+(-15,5)$);
+  \coordinate (K) at ($(J)+(12,-7)$);
+  \coordinate (L) at ($(K)+(30,-1)$);
+
+  % Draw top
+  \draw[fill, pattern=section, line width=1.1pt]
+  (A)--
+  (B)--
+  (C)--
+  (D)--
+  (E)--
+  (F)--
+  (A)
+  --cycle;
+
+  % Draw bottom
+  \draw[fill, pattern=section, line width=1.1pt]
+  (G)--
+  (H)--
+  (I)--
+  (J)--
+  (K)--
+  (L)--
+  (G)
+  --cycle;
+
+  % Dimensions
+  \newif\ifdimension
+  \dimensionfalse
+  \newcount\Ndim=0
+  \def\SeeDim#1{\ifdimension\global\advance\Ndim by 1 \the\Ndim\else#1\fi}
+  \Hdimension[text=\SeeDim{Inlet}, distance=-40]  (A)--(D);
+  \Hdimension[text=\SeeDim{Isolator}, distance=-28]  (D)--(H);
+  \Hdimension[text=\SeeDim{Combustor}, distance=-28]  (H)--(C);
+  \Hdimension[text=\SeeDim{Nozzle}, distance=-40]  (C)--(B);
+\end{tikzpicture}

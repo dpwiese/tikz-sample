@@ -1,0 +1,30 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=1.0, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[squareblock, right of=input1,label=above:{},node distance=3.0cm] (block3){$W_{cl}^{-1}(s)$};
+      \node[whitesum, right of=block3,node distance=2.0cm](sum1){} ;
+      \node[squareblock, right of=sum1,label=above:{Controller},node distance=3.0cm] (block1){$G_{c}(s)$};
+      \node[whitesum, right of=block1,node distance=2.0cm](sum2){} ;
+      \node[squareblock, right of=sum2, label=above:{Plant},node distance=3.5cm] (block2) {$\frac{1}{Js+B}$};
+      \node[roundblock, below of=block2, label=above:{},node distance=2.0cm] (block4) {$B$};
+      \node[input, below of=block1,node distance=3.0cm](input2){};
+      \node[output, right of=block2,node distance=3.0cm] (output1) {};
+
+      % Draw lines
+      \draw[->](input1) -- node[near start]{$x_{d}$} node[pos=0.9] {} (block3);
+      \draw[->](block1) -- node[name=u] {$\tau$} (sum2);
+      \draw[->](sum2) -- node[near start]{$x_{d}$} node[pos=0.9] {} (block2);
+      \draw[->](block3) -- node {$r$} (sum1);
+      \draw[->](sum1) -- node {} (block1);
+      \draw[->](block4) -| node[near end]{$+$} (sum2);
+      \draw[->](block2) -- node [name=y] {$x_p (t)$} node[pos=0.9] {$+$}(output1);
+      \draw[-](y) |- node[pos=0.95] {} node [pos=0.075] {} (input2);
+      \draw[-](y) |- node[pos=0.95] {} node [pos=0.075] {} (block4);
+      \draw[->](input2) -| node {} (sum1);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

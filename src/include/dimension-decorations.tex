@@ -1,0 +1,529 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% DIMENSION DECORATIONS %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+%-> New if
+\newif\if@dim@connection
+
+%-> New TeX dimensions
+\newdimen\dim@x
+\newdimen\dim@y
+\newdimen\dim@sep
+\newdimen\dim@overline
+\newdimen\dim@overlineI
+\newdimen\dim@overlineII
+\newdimen\dim@text@translation
+
+% x=, y=
+%\newif\iftikz@isdimension
+%\def\tikz@checkunit#1{%
+%  \pgfmathparse{#1}%
+%  \let\iftikz@isdimension=\ifpgfmathunitsdeclared%
+%}
+%\tikz@checkunit{1}
+%\iftikz@isdimension
+%true
+%\else
+%false
+%\fi
+
+% output scale
+%  \pgf@pt@x=\pgf@x%
+%  \pgf@pt@y=\pgf@y%
+%  \let\pgf@pt@aa=\pgf@tempaa%
+%  \let\pgf@pt@ba=\pgf@tempba%
+%  \let\pgf@pt@ab=\pgf@tempab%
+%  \let\pgf@pt@bb=\pgf@tempbb%
+%  \def\pgf@trans@idtest{#1,#2,#3,#4}%
+%  \ifx\pgf@trans@idtest\pgf@trans@idtext%
+%  \else%
+%    \pgf@pt@identityfalse%->\ifpgf@pt@identity
+%  \fi%
+
+%-> Horizontal dimension
+\pgfdeclaredecoration{Hdim}{final}{%
+\state{final}{%
+% Setting needed dimensions from pgfkeys values.
+\tikz@checkunit{\pgfkeysvalueof{/pgf/decoration/distance}}
+\iftikz@isdimension
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}}
+\else
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}*\pgf@yy}
+\fi
+\pgfmathsetlength{\dim@x}{\pgfdecoratedpathlength*cos(\pgfdecoratedangle)}
+\pgfmathsetlength{\dim@y}{\pgfdecoratedpathlength*sin(\pgfdecoratedangle)}
+\pgfmathsetlength{\dim@overline}{\pgfkeysvalueof{/pgf/decoration/overline}}
+\pgfmathsetlength{\dim@text@translation}{\pgfkeysvalueof{/pgf/decoration/text translation}}
+% Setting text to write from pgfkeys value.
+\def\dim@text{\pgfkeysvalueof{/pgf/decoration/text}}
+% The overline verse (where it points. Positive or negative) depends
+% on dimension sep and angle of the segment to dimension.
+\ifdim0pt<\dim@sep
+  % Case with positive dimension sep.
+  % Normal behaviour.
+  \pgfmathsetlength{\dim@overlineI}{\dim@overline}
+  \pgfmathsetlength{\dim@overlineII}{\dim@overline}
+\else
+  % Case with negative dimension sep.
+  % The value of dimension overline I is different from
+  % dimension overline II and it depends on the
+  % quadrant where the the segment is.
+  \pgfmathparse{abs(\dim@sep)<abs(\dim@y)}
+  \if\pgfmathresult1
+    % true
+    \ifnum180<\pgfdecoratedangle
+      \pgfmathsetlength{\dim@overlineI}{-\dim@overline}
+      \pgfmathsetlength{\dim@overlineII}{\dim@overline}
+    \else
+      \pgfmathsetlength{\dim@overlineI}{\dim@overline}
+      \pgfmathsetlength{\dim@overlineII}{-\dim@overline}
+    \fi
+  \else
+    % false
+    \pgfmathsetlength{\dim@overlineI}{-\dim@overline}
+    \pgfmathsetlength{\dim@overlineII}{-\dim@overline}
+  \fi
+\fi
+% Set to rotation transformation because we want dimension
+% only the horizontal distance between two points.
+\pgftransformrotate{-\pgfdecoratedangle}
+% The drawing depends on segment to dimension orientation
+\ifnum180<\pgfdecoratedangle
+  % FIRST POINT HIGHER
+  %
+  % Node drawing. It can be translate along the path with
+  % text translation option.
+  {
+   \pgftransformshift{\pgfpoint{\dim@x/2+\dim@text@translation}{\dim@sep}}
+  % Capturing the TikZ picture font size
+  \dim@text@font
+  \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+  }
+  % Drawing the connection segments.
+  \pgfpathmoveto{\pgfpoint{0pt}{\dim@sep+\dim@overlineI}}
+  % Check if the first connection line must be drawn.
+  \if@dim@connection
+    \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+  \else
+    \pgfpathlineto{\pgfpoint{0pt}{\dim@sep-\dim@overlineI}}
+  \fi
+  \pgfpathmoveto{\pgfpoint{\dim@x}{\dim@sep+\dim@overlineII}}
+  % Check if the second connection line must be drawn.
+  \if@dim@connection
+    \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+  \else
+    \pgfpathlineto{\pgfpoint{\dim@x}{\dim@sep-\dim@overlineII}}
+  \fi
+  % Draw an extra line if node text lies outside of the
+  % dimension.
+  \pgfmathparse{abs(.5\dim@x)<abs(\dim@text@translation)}
+  \if\pgfmathresult1
+    % Dimension label outside.
+    \ifdim0pt<\dim@text@translation
+      % Text lies on right.
+      \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@sep}}
+    \else
+      % Text lies on left.
+      \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+      \pgfpathlineto{\pgfpoint{0pt}{\dim@sep}}
+    \fi
+  \fi
+  % Draw the dimension segments with arrows.
+  \pgfsetarrowsstart{\dim@arrow@type}
+  \pgfsetarrowsend{\dim@arrow@type}
+  \pgfpathmoveto{\pgfpoint{0pt}{\dim@sep}}
+  \pgfpathlineto{\pgfpoint{\dim@x}{\dim@sep}}
+  % Finally put all the stuff on paper.
+  \pgfusepath{stroke}
+\else
+  % FIRST POINT LOWER
+  %
+  % Node drawing. It can be translate along the path with
+  % text translation option.
+  {
+   \pgftransformshift{\pgfpoint{\dim@x/2+\dim@text@translation}{\dim@y+\dim@sep}}
+  % Capturing the TikZ picture font size
+  \dim@text@font
+  \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+  }
+  % Drawing the connection segments.
+  \pgfpathmoveto{\pgfpoint{0pt}{\dim@y+\dim@sep+\dim@overlineI}}
+  % Check if the first connection line must be drawn.
+  \if@dim@connection
+    \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+  \else
+    \pgfpathlineto{\pgfpoint{0pt}{\dim@y+\dim@sep-\dim@overlineI}}
+  \fi
+  \pgfpathmoveto{\pgfpoint{\dim@x}{\dim@y+\dim@sep+\dim@overlineII}}
+  % Check if the second connection line must be drawn.
+  \if@dim@connection
+    \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+  \else
+    \pgflineto{\pgfpoint{\dim@x}{\dim@y+\dim@sep-\dim@overlineII}}
+  \fi
+  % Draw an extra line if node text lies outside of the
+  % dimension.
+  \pgfmathparse{abs(.5\dim@x)<abs(\dim@text@translation)}
+  \if\pgfmathresult1
+    % Dimension label outside.
+    \ifdim0pt<\dim@text@translation
+      % Text lies on right.
+      \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y+\dim@sep}}
+    \else
+      % Text lies on left.
+      \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+      \pgfpathlineto{\pgfpoint{0pt}{\dim@y+\dim@sep}}
+    \fi
+  \fi
+  % Draw the dimension segments with arrows.
+  \pgfsetarrowsstart{\dim@arrow@type}
+  \pgfsetarrowsend{\dim@arrow@type}
+  \pgfpathmoveto{\pgfpoint{0pt}{\dim@y+\dim@sep}}
+  \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y+\dim@sep}}
+  % Finally put all the stuff on paper.
+  \pgfusepath{stroke}
+\fi
+}}
+
+
+%-> Vertical dimension (NOT UTILISED IN THE FOLLOWING DRAWING)
+\pgfdeclaredecoration{Vdim}{final}{%
+\state{final}{%
+% Setting needed dimensions from pgfkeys values.
+\tikz@checkunit{\pgfkeysvalueof{/pgf/decoration/distance}}
+\iftikz@isdimension
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}}
+\else
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}*\pgf@yy}
+\fi
+\pgfmathsetlength{\dim@x}{\pgfdecoratedpathlength*cos(\pgfdecoratedangle)}
+\pgfmathsetlength{\dim@y}{\pgfdecoratedpathlength*sin(\pgfdecoratedangle)}
+\pgfmathsetlength{\dim@overline}{\pgfkeysvalueof{/pgf/decoration/overline}}
+\pgfmathsetlength{\dim@text@translation}{\pgfkeysvalueof{/pgf/decoration/text translation}}
+% Setting text to write from pgfkeys value.
+\def\dim@text{\pgfkeysvalueof{/pgf/decoration/text}}
+% The overline verse (where it points. Positive or negative) depends
+% on dimension sep and angle of the segment to dimension.
+\ifdim0pt<\dim@sep
+  % Case with positive dimension sep.
+  % Normal behaviour.
+  \pgfmathsetlength{\dim@overlineI}{\dim@overline}
+  \pgfmathsetlength{\dim@overlineII}{\dim@overline}
+\else
+  % Case with negative dimension sep.
+  % The value of dimension overline I is different from
+  % dimension overline II and it depends on the
+  % quadrant where the the segment is.
+  \pgfmathparse{abs(\dim@sep)<abs(\dim@x)}
+  \if\pgfmathresult1
+    % true
+    \ifnum90<\pgfdecoratedangle
+      \ifnum270<\pgfdecoratedangle
+        \pgfmathsetlength{\dim@overlineI}{\dim@overline}
+        \pgfmathsetlength{\dim@overlineII}{-\dim@overline}
+      \else
+        \pgfmathsetlength{\dim@overlineI}{-\dim@overline}
+        \pgfmathsetlength{\dim@overlineII}{\dim@overline}
+      \fi
+    \else
+      \pgfmathsetlength{\dim@overlineI}{\dim@overline}
+      \pgfmathsetlength{\dim@overlineII}{-\dim@overline}
+    \fi
+  \else
+    % false
+    \pgfmathsetlength{\dim@overlineI}{-\dim@overline}
+    \pgfmathsetlength{\dim@overlineII}{-\dim@overline}
+  \fi
+\fi
+% Set to rotation transformation because we want dimension
+% only the horizontal distance between two points.
+\pgftransformrotate{-\pgfdecoratedangle}
+\ifnum180<\pgfdecoratedangle
+  %
+  % FIRST POINT HIGHER
+  %
+  \ifnum270>\pgfdecoratedangle
+    % Third quadrant
+    % Node drawing. It can be translate along the path with
+    % text translation option.
+    {
+     \pgftransformshift{\pgfpoint{\dim@sep}{\dim@y/2-\dim@text@translation}}
+    % In this case, the node must e rotated.
+    \pgftransformrotate{-90}
+    % Capturing the TikZ picture font size
+    \dim@text@font
+    \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+    }
+    % Drawing the connection segments.
+    \pgfpathmoveto{\pgfpoint{\dim@sep+\dim@overlineI}{0pt}}
+    % Check if the first connection line must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@sep-\dim@overlineI}{0pt}}
+    \fi
+    \pgfpathmoveto{\pgfpoint{\dim@sep+\dim@overlineII}{\dim@y}}
+    % Check if the second connection line must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@sep-\dim@overlineII}{\dim@y}}
+    \fi
+    % Draw an extra line if node text lies outside of the
+    % dimension.
+    \pgfmathparse{abs(.5\dim@y)<abs(\dim@text@translation)}
+    \if\pgfmathresult1
+      % Dimension label outside.
+      \ifdim0pt<\dim@text@translation
+        % Text lies on right.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+        \pgfpathlineto{\pgfpoint{\dim@sep}{\dim@y}}
+      \else
+        % Text lies on left.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+        \pgfpathlineto{\pgfpoint{\dim@sep}{0pt}}
+      \fi
+    \fi
+    % Draw the dimension segments with arrows.
+    \pgfsetarrowsstart{\dim@arrow@type}
+    \pgfsetarrowsend{\dim@arrow@type}
+    \pgfpathmoveto{\pgfpoint{\dim@sep}{0pt}}
+    \pgfpathlineto{\pgfpoint{\dim@sep}{\dim@y}}
+    % Finally put all the stuff on paper.
+    \pgfusepath{stroke}
+  \else
+    % Fourth quadrant
+    % Node drawing. It can be translate along the path with
+    % text translation option.
+    {
+     \pgftransformshift{\pgfpoint{\dim@x+\dim@sep}{\dim@y/2-\dim@text@translation}}
+    % In this case, the node must e rotated.
+    \pgftransformrotate{-90}
+    % Capturing the TikZ picture font size
+    \dim@text@font
+    \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+    }
+    % Drawing the connection segments.
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep+\dim@overlineI}{0pt}}
+    % Check if the first dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep-\dim@overlineI}{0pt}}
+    \fi
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep+\dim@overlineII}{\dim@y}}
+    % Check if the second dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep-\dim@overlineII}{\dim@y}}
+    \fi
+    % Draw an extra line if node text lies outside of the
+    % dimension.
+    \pgfmathparse{abs(.5\dim@y)<abs(\dim@text@translation)}
+    \if\pgfmathresult1
+      % Dimension label outside.
+      \ifdim0pt<\dim@text@translation
+        % Text lies on right.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+        \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{\dim@y}}
+      \else
+        % Text lies on left.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+        \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{0pt}}
+      \fi
+    \fi
+    % Draw the dimension segments with arrows.
+    \pgfsetarrowsstart{\dim@arrow@type}
+    \pgfsetarrowsend{\dim@arrow@type}
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep}{0pt}}
+    \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{\dim@y}}
+    % Finally put all the stuff on paper.
+    \pgfusepath{stroke}
+  \fi
+\else
+  %
+  % FIRST POINT LOWER
+  %
+  \ifnum90>\pgfdecoratedangle
+    % First quadrant
+    % Node drawing. It can be translate along the path with
+    % text translation option.
+    {
+     \pgftransformshift{\pgfpoint{\dim@x+\dim@sep}{\dim@y/2-\dim@text@translation}}
+    % In this case, the node must e rotated.
+    \pgftransformrotate{-90}
+    % Capturing the TikZ picture font size
+    \dim@text@font
+    \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+    }
+    % Drawing the connection segments.
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep+\dim@overlineI}{0pt}}
+    % Check if the first dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep-\dim@overlineI}{0pt}}
+    \fi
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep+\dim@overlineII}{\dim@y}}
+    % Check if the second dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep-\dim@overlineII}{\dim@y}}
+    \fi
+    % Draw an extra line if node text lies outside of the
+    % dimension.
+    \pgfmathparse{abs(.5\dim@y)<abs(\dim@text@translation)}
+    \if\pgfmathresult1
+      % Dimension label outside.
+      \ifdim0pt<\dim@text@translation
+        % Text lies on right.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+        \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{\dim@y}}
+      \else
+        % Text lies on left.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+        \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{0pt}}
+      \fi
+    \fi
+    % Draw the dimension segments with arrows.
+    \pgfsetarrowsstart{\dim@arrow@type}
+    \pgfsetarrowsend{\dim@arrow@type}
+    \pgfpathmoveto{\pgfpoint{\dim@x+\dim@sep}{0pt}}
+    \pgfpathlineto{\pgfpoint{\dim@x+\dim@sep}{\dim@y}}
+    % Finally put all the stuff on paper.
+    \pgfusepath{stroke}
+  \else
+    % Second quadrant
+    % Node drawing. It can be translate along the path with
+    % text translation option.
+    {
+     \pgftransformshift{\pgfpoint{\dim@sep}{\dim@y/2-\dim@text@translation}}
+    % In this case, the node must e rotated.
+    \pgftransformrotate{-90}
+    % Capturing the TikZ picture font size
+    \dim@text@font
+    \pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+    }
+    % Drawing the connection segments.
+    \pgfpathmoveto{\pgfpoint{\dim@sep+\dim@overlineI}{0pt}}
+    % Check if the first dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@sep-\dim@overlineI}{0pt}}
+    \fi
+    \pgfpathmoveto{\pgfpoint{\dim@sep+\dim@overlineII}{\dim@y}}
+    % Check if the second dimension connection must be drawn.
+    \if@dim@connection
+      \pgfpathlineto{\pgfpoint{\dim@x}{\dim@y}}
+    \else
+      \pgfpathlineto{\pgfpoint{\dim@sep-\dim@overlineII}{\dim@y}}
+    \fi
+    % Draw an extra line if node text lies outside of the
+    % dimension.
+    \pgfmathparse{abs(.5\dim@y)<abs(\dim@text@translation)}
+    \if\pgfmathresult1
+      % Dimension label outside.
+      \ifdim0pt<\dim@text@translation
+        % Text lies on right.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+        \pgfpathlineto{\pgfpoint{\dim@sep}{0pt}}
+      \else
+        % Text lies on left.
+        \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+        \pgfpathlineto{\pgfpoint{\dim@sep}{\dim@y}}
+      \fi
+    \fi
+    % Draw the dimension segments with arrows.
+    \pgfsetarrowsstart{\dim@arrow@type}
+    \pgfsetarrowsend{\dim@arrow@type}
+    \pgfpathmoveto{\pgfpoint{\dim@sep}{0pt}}
+    \pgfpathlineto{\pgfpoint{\dim@sep}{\dim@y}}
+    % Finally put all the stuff on paper.
+    \pgfusepath{stroke}
+  \fi
+\fi
+}}
+
+%-> Along the dimension
+\pgfdeclaredecoration{dim}{final}{
+\state{final}{%
+% Check if the dimension inserted has unit
+\tikz@checkunit{\pgfkeysvalueof{/pgf/decoration/distance}}
+\iftikz@isdimension
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}}
+\else
+  \pgfmathsetlength{\dim@sep}{\pgfkeysvalueof{/pgf/decoration/distance}*\pgf@yy}
+\fi
+% Overline value if function of the sep sign.
+\ifdim0pt>\dim@sep
+  \pgfmathsetlength{\dim@overline}{-\pgfkeysvalueof{/pgf/decoration/overline}}
+\else
+  \pgfmathsetlength{\dim@overline}{\pgfkeysvalueof{/pgf/decoration/overline}}
+\fi
+\pgfmathsetlength{\dim@text@translation}{\pgfkeysvalueof{/pgf/decoration/text translation}}
+% Setting the text to be inserted into the dimension node.
+\def\dim@text{\pgfkeysvalueof{/pgf/decoration/text}}
+{
+\pgftransformshift{\pgfpoint{\pgfdecoratedpathlength/2+\dim@text@translation}{\dim@sep}}
+% Capturing the TikZ picture font size
+\dim@text@font
+\pgfnode{rectangle}{south}{\dim@text}{\dim@text@nodename}{\pgfusepath{discard}}
+}
+\pgfpathmoveto{\pgfpoint{0pt}{\dim@sep+\dim@overline}}
+% Check if the first connection line mus b drawn
+\if@dim@connection
+  \pgfpathlineto{\pgfpoint{0pt}{0pt}}
+\else
+  \pgfpathlineto{\pgfpoint{0pt}{\dim@sep-\dim@overline}}
+\fi
+\pgfpathmoveto{\pgfpoint{(\pgfdecoratedpathlength}{\dim@sep+\dim@overline}}
+% Check if the first connection line mus b drawn
+\if@dim@connection
+  \pgfpathlineto{\pgfpoint{\pgfdecoratedpathlength}{0pt}}
+\else
+  \pgfpathlineto{\pgfpoint{(\pgfdecoratedpathlength}{\dim@sep-\dim@overline}}
+\fi
+% Draw an extra line if node text lies outside of the
+% dimension.
+\pgfmathparse{abs(.5*\pgfdecoratedpathlength)<abs(\dim@text@translation)}
+\if\pgfmathresult1
+  % Dimension label outside.
+  \ifdim0pt<\dim@text@translation
+    % Text lies on right.
+    \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south east}}
+    \pgfpathlineto{\pgfpoint{\pgfdecoratedpathlength}{\dim@sep}}
+  \else
+    % Text lies on left.
+    \pgfpathmoveto{\pgfpointanchor{\dim@text@nodename}{south west}}
+    \pgfpathlineto{\pgfpoint{0pt}{\dim@sep}}
+  \fi
+\fi
+\pgfsetarrowsstart{\dim@arrow@type}
+\pgfsetarrowsend{\dim@arrow@type}
+\pgfpathmoveto{\pgfpoint{0pt}{\dim@sep}}
+\pgfpathlineto{\pgfpoint{\pgfdecoratedpathlength}{\dim@sep}}
+\pgfusepath{stroke}
+\pgfpathmoveto{\pgfpoint{0pt}{0pt}}
+}}
+
+%-> Initial values
+\pgfkeys{/pgf/decoration/.cd,
+         distance/.initial         = 10pt,
+         overline/.initial         = 1mm,
+         text/.initial             = {},
+         text translation/.initial = 0pt,
+         text node name/.store in  = \dim@text@nodename,
+         text node name            = dim_text,
+         >/.store in               = \dim@arrow@type,
+         >                         = latex,
+         connection/.is if         = @dim@connection,
+         connection                = false,
+         font/.store in            = \dim@text@font,
+         font                      = \tikz@textfont,
+}
+\makeatother

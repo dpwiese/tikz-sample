@@ -1,0 +1,71 @@
+\clearpage
+\section*{\currfilename}
+
+% We need layers to draw the block diagram
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background, main, foreground}
+
+\begin{figure}[H]
+  \fontsize{10pt}{10pt}\selectfont
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=1.0, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[mux, minimum height=2.0cm, minimum width=0.1cm] (block2){};
+      \matrix[ampersand replacement=\&, row sep=1.0cm, left of=block2, node distance=0.05cm] (block2in) {
+      \node [coordinate] (b2inA) {};\\
+      \node [coordinate] (b2inB) {};\\
+      };
+      \node[squareblock, minimum height=1cm, minimum width=1cm, left of=b2inB, node distance=1.5cm] (block1){$\frac{1}{s}$};
+      \node[whitesum, left of=block1, node distance=1.5cm] (sum1) {};
+      \node[input, left of=sum1,node distance=2.5cm](input1){};
+      \node[squareblock, minimum height=1cm, minimum width=1cm, below of=sum1, node distance=1.5cm] (block3){$C_{pz}$};
+      \node[input, right of=block2,node distance=1.0cm](input4a){};
+      \node[input, right of=input4a,node distance=1.0cm](input4b){};
+      \node[squareblock, minimum height=1cm, minimum width=1cm, above of=input4b,node distance=0.75cm] (block4) {$K_{\text{lqr}}^{\top}$};
+      \node[roundblock, minimum height=1cm, minimum width=1cm, below of=input4b,node distance=0.75cm] (block5) {$\theta^{\top}$};
+      \node[whitesum, right of=input4b, node distance=2.0cm] (sum2) {};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, right of=sum2,node distance=2.5cm] (block6) {Plant};
+      \node[input, right of=block3,node distance=2.3cm](input2){};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, above of=block6,node distance=1.75cm] (block7) {\shortstack[c]{Reference\\Model}};
+      \node[whitesum,right of=block6, node distance=2.5cm] (sum3) {};
+      \node[output, right of=sum3,node distance=1.0cm] (output1) {};
+      \node[input, right of=input1,node distance=1.0cm](input1a){};
+      % \node[output, below of=block5,node distance=1.5cm] (output2) {};
+      % Adaptive Arrow
+      \coordinate (arrow1) at ([xshift=-0.7cm,yshift=-0.7cm] block5);
+      \coordinate (arrow2) at (block5.225);
+      \coordinate (arrow3) at (block5.45);
+      \coordinate (arrow4) at ([xshift=0.7cm,yshift=0.7cm] block5);
+      \draw[-](arrow1) -- (arrow2);
+      \draw[->](arrow3) -- (arrow4);
+      \node[output, below of=arrow1,node distance=0.2cm] (output2) {};
+      % Shaded box
+      \begin{pgfonlayer}{background}
+      \path (sum1 |- sum1)+(-0.75,2.0) node (c) {};
+      \path (sum2 -| sum2)+(0.5,-2.75) node (d) {};
+      \path[fill=gray!20, draw, dashed] (c) rectangle (d);
+      \end{pgfonlayer}
+      % Draw
+      \draw[->](input1) -- node[pos=0.2]{$z_{\text{cmd}}$} (sum1);
+      \draw[->](sum1) -- node[pos=0.5]{$\dot{x}_{e}$} (block1);
+      \draw[->](block1) -- node[pos=0.6]{$x_{e}$} (b2inB);
+      \draw[->](block2) -- node[name=x,pos=0.5]{$x$} (input4a);
+      \draw[->](input4a) |- (block4);
+      \draw[->](input4a) |- (block5);
+      \draw[->](block4) -| node[pos=0.2]{$u_{\text{bl}}$} node[pos=0.9]{$+$} (sum2);
+      \draw[->](sum2) -- node[pos=0.7]{$u$} (block6);
+      \draw[->](block5) -| node[pos=0.2]{$u_{\text{ad}}$} node[pos=0.9]{$+$} (sum2);
+      \draw[->](block3) -- node[pos=0.5]{$z$} (sum1);
+      \draw[->](input2) -- (block3);
+      \draw[->](block6) -- node[pos=0.3]{$x_{p}$} node[name=xp,pos=0.5]{} node[pos=0.8]{$+$} (sum3);
+      \draw[->](block7) -| node[pos=0.2]{$x_{m}^{o}$} node[pos=0.9]{$-$} (sum3);
+      \draw[-](sum3) -- node[name=eo,pos=0.5]{$e^{o}$} (output1);
+      \draw[-](xp) |- node[pos=0.5]{} (input2);
+      % \draw[-](output2) -| node[pos=0.5]{} (input2);
+      \draw[->](input2) |- node[pos=0.8]{$x_{p}$} (b2inA);
+      \draw[->](input1a) |- (block7);
+      \draw[-](output1) |- (output2);
+      \draw[-](output2) -| (arrow1);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

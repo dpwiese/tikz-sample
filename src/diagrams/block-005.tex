@@ -1,0 +1,27 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[scale=1, auto, node distance=2cm,>=latex']
+      \matrix[ampersand replacement=\&, column sep=0.5cm, node distance=2.5cm] (regions) at (0,0){
+        \node[block, minimum height=2cm, minimum width=2cm] (R1) {}; \\
+      };
+
+      \node [coordinate, above of=R1] (topc) {};
+      \node [coordinate, right of=topc, node distance=0.7cm] (topr) {};
+      \node [coordinate, left of=topc, node distance=0.7cm] (topl) {};
+      \node [coordinate, below of=R1] (botc) {};
+      \node [coordinate, right of=botc, node distance=0.7cm] (botr) {};
+      \node [coordinate, left of=botc, node distance=0.7cm] (botl) {};
+
+      % Draw
+      \draw [<-] (R1.north) -- node [pos=0.5]{} (topc);
+      \draw [<-] (R1.north) + (0.7cm,0cm) -- node [pos=0.5]{} (topr);
+      \draw [<-] (R1.north) + (-0.7cm,0cm) -- node [pos=0.5]{} (topl);
+      \draw [<-] (R1.south) -- node [pos=0.5]{} (botc);
+      \draw [<-] (R1.south) + (0.7cm,0cm) -- node [pos=0.5]{} (botr);
+      \draw [<-] (R1.south) + (-0.7cm,0cm) -- node [pos=0.5]{} (botl);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

@@ -1,0 +1,131 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}[x=1mm, y=1mm,>=latex,line join=round,font=\small]
+  \coordinate (o) at (0,0);
+  \coordinate (A) at ($(o)+(0,0)$);
+  % \coordinate (B) at ($(A)+(165,0)$); %for 1in margins
+  \coordinate (B) at ($(A)+(152,0)$); %for 1.25in margins
+  \coordinate (C) at ($(B)+(0,-20)$);
+  \coordinate (D) at ($(C)+(-50,0)$);
+  \coordinate (E) at ($(D)+(-16,6)$);
+  \coordinate (F) at ($(E)+(-12,3)$);
+  \coordinate (G) at ($(C)+(0,-10)$);
+  \coordinate (H) at ($(G)+(-70,0)$);
+  \coordinate (I) at ($(H)+(20,-6)$);
+  \coordinate (L) at ($(G)+(0,-6)$);
+
+  \draw[fill, pattern=section, line width=1.1pt]
+  (A)--
+  (B)--
+  (C)--
+  (D)--
+  (E)--
+  (F)--
+  (A)
+  --cycle;
+
+  \draw[fill, pattern=section, line width=1.1pt]
+  (G)--
+  (H)--
+  (I)--
+  (L)
+  --cycle;
+
+  \newif\ifdimension
+  \dimensionfalse
+  %\dimensiontrue % if true, you will see the dimension number (%x) on the draw
+  \newcount\Ndim=0
+  \def\SeeDim#1{\ifdimension\global\advance\Ndim by 1 \the\Ndim\else#1\fi}
+  \Hdimension[text=\SeeDim{10}, distance=-40]  (A)--(B);
+
+  %%-> 2
+  %\Hdimension[text=\SeeDim{10}, distance=3] (Cup)--(Hup);
+  %
+  %%-> 3
+  %\Hdimension[text=\SeeDim{20}, distance=26.425] (Bup)--(Cup);
+  %%-> 4
+  %\Hdimension[text     = \SeeDim{100},
+  %            distance = 3] (Iup)--(Oup);
+  %
+  %%-> 5
+  %\Hdimension[text     = \SeeDim{10},
+  %            distance = 28] (Oup)--(Pup);
+  %
+  %%-> 6
+  %\dimension[text     = \SeeDim{\diameter30},
+  %           distance = -25] (Odown)--(Oup);
+  %
+  %%-> 7
+  %\Hdimension[text     = \SeeDim{43.8},
+  %            distance = -48.15] (throat_down)--(Odown);
+  %
+  %%-> 8
+  %\Hdimension[text     = \SeeDim{92.74},
+  %            distance = -40.5] (IN_down)--(Bdown);
+  %
+  %%-> 9
+  %\dimension[text             = \SeeDim{\diameter7.7},
+  %           text translation = -7mm,
+  %           distance         = 20] (throat_down)--(throat_up);
+  %
+  %%-> 10
+  %\dimension[text     = \SeeDim{\diameter10},
+  %           distance = -8] (Pdown)--(Pup);
+  %
+  %%-> 11 (by hand)
+  %\draw[->] (center1_up)--++(45:7)node[sloped,
+  %                                     above     = .4mm,
+  %                                     pos       = .3,
+  %                                     inner sep = 0.5pt]{\SeeDim{R7}};
+  %
+  %%-> 12 (by hand)
+  %\draw[->] (center2_up)--++(225:7)node[above     = .4mm,
+  %                                      pos       = .4,
+  %                                      inner sep = 0.5pt,
+  %                                      rotate    = 45,
+  %                                      fill      = white]{\SeeDim{R7}};
+  %
+  %%-> 13 (by hand)
+  %\coordinate (raccordo_up)   at ($(center1_up)+(45:7)$);
+  %\coordinate (raccordo_down) at ($(center1_down)+(-45:7)$);
+  %\draw (raccordo_up)--++(135:20);
+  %\draw (raccordo_down)--++(225:20);
+  %\path[name path=C1](raccordo_up)--++(-45:20);
+  %\path[name path=C2](raccordo_down)--++(45:20);
+  %\path[name intersections={of=C1 and C2}];
+  %\coordinate (C90) at (intersection-1);
+  %\draw[<->] ($(C90)+(135:30)$)arc[start angle = 135,
+  %                                 delta angle = 90,
+  %                                 radius      = 30];
+  %\def\angle{35}
+  %\node[rotate = \angle+45,
+  %      anchor = south] at ($(C90)+(135+\angle:30)$){\SeeDim{\ang{90}}};
+  %
+  %%-> 14
+  %\dimension[text             = \SeeDim{\diameter60},
+  %           distance         = -5,
+  %           >                = angle 45,
+  %           text translation = .5cm] ($(Ldown)!.5!(Mdown)$)--($(Lup)!.5!(Mup)$);
+  %
+  %%-> 15
+  %\dimension[text             = \SeeDim{\diameter80},
+  %           distance         = -10,
+  %           text translation = .5cm] (Idown)--(Iup);
+  %
+  %%-> 16
+  %\dimension[text             = \SeeDim{\diameter8 ($\times$4)},
+  %           distance         = 10,
+  %           text translation = -12mm] (Gdown)--(Fdown);
+  %
+  %%-> 17
+  %\dimension[text     = \SeeDim{G1'},
+  %           distance = 10] (Bdown)--(Bup);
+  %
+  %%-> 18
+  %\dimension[text     = \SeeDim{\diameter23},
+  %           distance = 5] (Adown)--(Aup);
+  %% Dimensions scale
+  %\node[anchor = north west] at (current bounding box.south west){All dimensions are in millimeters};
+
+\end{tikzpicture}

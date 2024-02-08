@@ -1,0 +1,47 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.8, every node/.style={transform shape}]%, node distance=1.0cm, >=latex']
+      \node[squareblock, minimum height=1cm, minimum width=2cm] (block1){\shortstack{Baseline \\ Controller}};
+      \node[left=of block1.170, node distance=2.0cm] (j1) {};
+      % \node[left of=j1, node distance=1.5cm] (input1) {};
+      \node[left=of block1.190, node distance=1.0cm] (j2) {};
+      % \node[right of=j2, node distance=0.5cm] (input2) {};
+      \node[squareblock, below of=block1, node distance=2cm, minimum height=1cm, minimum width=2cm] (block2){\shortstack{Adaptive \\ Controller}};
+      \node[left=of block2.170, node distance=2.0cm] (j3) {};
+      % \node[left of=j3, node distance=1.0cm] (input3) {};
+      \node[left=of block2.190, node distance=1.0cm] (j4) {};
+      % \node[right of=j4, node distance=0.5cm] (input4) {};
+      \node[left of=j4, node distance=1.0cm] (input5) {};
+      \node[sum, minimum width=1cm, right of=block1, node distance=2.5cm] (sum1) {$+$};
+      \node[squareblock, minimum width=2cm, right of=sum1, node distance=2.5cm] (block3) {Actuators};
+      \node [right of=block3,draw=black, anchor=west,node distance=2.0cm, minimum width=2cm, inner sep= 0mm] (block4) {};
+      \node[squareblock, minimum width=2cm, right of=block4, node distance=4.0cm] (block5) {Sensors};
+      \node[output, right of=block5,node distance=2.0cm] (output1) {};
+      \node[tee, below of=block2,node distance=1.8cm](tee1){};
+      % Draw lines
+      % \draw[-](input1) -- node[near start]{$z_{cmd}$} (j1);
+      % \draw[->](j1) -- (block1.170);
+      % \draw[->](input2) -- (block1.190);
+      % \draw[-](j1) -- (j3);
+      % \draw[->](j3) -- (block2.170);
+      % \draw[->](input2) -- (input4)
+      % \draw[->](input4) -- (block2.190);
+      \draw[->](block1) -- (sum1);
+      \draw[->](sum1) -- (block3);
+      \draw[->](block3) -- (block4);
+      \draw[->](block4) -- node[name=n,pos=0.5]{}(block5);
+      \draw[->](block5) -- node[name=y,pos=0.7]{} node[near end]{$x$}(output1);
+      \draw[-](y) |- node[pos=0.9] {} (tee1);
+      % \draw[-](tee1) -| (input5);
+      % \draw[->](input5) -- (input4)
+      % Model box
+      \path (block1 |- block1)+(-1.0,0.7) node (c) {};
+      \path (block1 -| block1)+(1.0,-0.7) node (d) {};
+      \path[draw, dashed] (c) rectangle (d);
+      % \node[below of=n,node distance=1.2cm]{600 Hz};
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

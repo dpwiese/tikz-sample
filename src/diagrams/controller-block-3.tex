@@ -1,0 +1,32 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=1.0, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[input, right of= input1](input2){};
+      \node[yellowsum, right of=input2](sum1){$\sum$} ;
+      \node[smoothblock, right of=sum1,label=above:{Unmodeled Dynamics},node distance=3.0cm] (block1){$G_{\eta}(s)$};
+      \node[smoothblock, right of=block1, label=above:{Plant},node distance=3.5cm] (block2) {$\displaystyle \frac{1}{s-a_p}$};
+      \node[smoothblock, above of=block2, label=above:{Reference Model}, node distance=2.25cm] (block3) {$\displaystyle \frac{1}{s-a_m}$};
+      \node[yellowsum, right of=block2,node distance=3.25cm] (sum2) {$\sum$};
+      \node[output, right of=sum2,node distance=1.25cm] (output1) {};
+      % We draw an edge between the controller and system block to
+      % calculate the coordinate u. We need it to place the measurement block.
+      \draw[->](block1) -- node[name=u] {$v(t)$} (block2);
+      \node[output, right of=block2] (output2) {};
+      \node[feedback, below of=u, label=above:{Feedback Gain}, node distance=2.25cm] (block4) {${\theta}$};
+      % Once the nodes are placed, connecting them is easy.
+      \draw[->](input1) -- node[near start]{$r(t)$} node[pos=0.9] {$+$} (sum1);
+      \draw[->](sum1) -- node {$u(t)$} (block1);
+      \draw[->](block2) -- node [name=y] {$x_p (t)$} node[pos=0.9] {$+$}(sum2);
+      \draw[->](y) |- (block4);
+      \draw[->](block4) -| node[pos=0.95] {$+$} node [pos=0.075] {} (sum1);
+      \draw[->](input2) |- (block3);
+      \draw[->](block3) -| node {$x_m (t)$} node[pos=0.95] {$-$}(sum2);
+      \draw[->](sum2) --  node[pos=0.65]{$e(t)$}(output1);
+      \draw[->](6.2,-2.5)--($(block4.225)!1.3cm!(block4.45)$);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

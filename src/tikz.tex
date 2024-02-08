@@ -1,0 +1,367 @@
+\documentclass{article}
+\usepackage[english]{babel}
+
+\usepackage{%
+  xcolor,
+  tikz,
+  float,
+  amssymb,
+  amsmath,
+  graphicx,
+  fullpage,
+  mathrsfs,
+  amsthm,
+  wasysym,
+  siunitx,
+  varwidth,
+  caption,
+  amsmath,
+  bm,
+  pgfplots,
+  currfile
+}
+
+\usetikzlibrary{%
+  positioning,
+  matrix,
+  patterns,
+  shapes.arrows,
+  intersections,
+  decorations,
+  decorations.markings,
+  decorations.pathmorphing,
+  matrix,
+  calc,
+  plotmarks,
+  shapes,
+  arrows
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION PATTERN DEFINITION %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength\thickness
+\pgfdeclarepatternformonly[\thickness]{section}
+{\pgfpointorigin}
+{\pgfpoint{1cm}{1cm}}
+{\pgfpoint{1cm}{1cm}}
+{
+\pgfsetlinewidth{\thickness}
+\pgfpathmoveto{\pgfpoint{0cm}{0cm}}
+\pgfpathlineto{\pgfpoint{1cm}{1cm}}
+\pgfpathclose
+\pgfsetlinewidth{\thickness}
+\pgfpathmoveto{\pgfpoint{0cm}{.5cm}}
+\pgfpathlineto{\pgfpoint{.5cm}{1cm}}
+\pgfpathclose
+\pgfsetlinewidth{\thickness}
+\pgfpathmoveto{\pgfpoint{.5cm}{0cm}}
+\pgfpathlineto{\pgfpoint{1cm}{.5cm}}
+\pgfusepath{stroke}
+}
+
+\tikzset{%
+  thickness/.store in = \thickness,
+  thickness           = 0.5pt
+}
+
+\pagestyle{empty}
+
+\tikzstyle{squareblock}=[draw, fill=white!50, rectangle, minimum height=1.0cm, minimum width=1.0cm, inner sep= 2mm]
+\tikzstyle{mux}=[draw, fill=black!100, rectangle, minimum height=1cm, minimum width=0.1mm, inner sep= 0mm]
+\tikzstyle{roundblock}=[draw, circle, fill=white!50, minimum height=1mm, inner sep= 1mm]
+\tikzstyle{whitesum} = [draw, fill=white!40, circle, minimum width=0.6cm, inner sep= 1mm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{tee} = [coordinate]
+\tikzstyle{block} = [draw, rectangle, minimum height=1cm, minimum width=2cm]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{modelinput} = [coordinate]
+\tikzstyle{modeloutput} = [coordinate]
+\tikzstyle {regionoutput} = [coordinate]
+\tikzstyle{gainblockleft} = [draw, fill=white!50, isosceles triangle,sharp corners, anchor=center, minimum height=0.5cm, minimum width=2cm,rotate=180]
+\tikzstyle{gainblockright} = [draw, fill=white!50, isosceles triangle,sharp corners, anchor=center, minimum height=0.5cm, minimum width=2cm]
+\tikzstyle{smoothblock}=[draw, fill=blue!50, rectangle, minimum height=1cm, minimum width=2cm, rounded corners=0.5mm, inner sep= 2mm]
+\tikzstyle{yellowsum} = [draw, fill=yellow!40, circle, minimum width=1cm, inner sep= 1mm]
+\tikzstyle{feedback} = [draw, fill=green!40, circle, minimum width=1cm]
+
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+  1 with {\arrow[semithick]{open triangle 60}}},
+  double distance=1.4pt, shorten >= 5.5pt,
+  preaction = {decorate},
+  postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+
+\tikzstyle{vecNoArrow} = [thick,
+  double distance=1.4pt,
+  preaction = {decorate},
+  postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+
+\tikzstyle{innerWhite} = [semithick, white,line width=1.4pt, shorten >= 4.5pt]
+
+\makeatletter
+\pgfdeclareshape{satnode}{%
+  \inheritsavedanchors[from={rectangle}]
+  \inheritbackgroundpath[from={rectangle}]
+  \inheritanchorborder[from={rectangle}]
+  \foreach \x in {center,north east,north west,north,south,south east,south west}{%
+    \inheritanchor[from={rectangle}]{\x}
+  }
+  \foregroundpath{%
+    \pgfpointdiff{\northeast}{\southwest}
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast
+    \pgfpathmoveto{\pgfpoint{0}{0.45\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{0}{-0.45\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{0.45\pgf@xa}{0}}
+    \pgfpathlineto{\pgfpoint{-0.45\pgf@xa}{0}}
+    \pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.2\pgf@xa}{-0.3\pgf@ya}}}
+    \pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.5\pgf@xa}{-0.3\pgf@ya}}}
+    \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.5\pgf@xa}{-0.3\pgf@ya}}}
+    \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.4\pgf@xa}{-0.3\pgf@ya}}}
+    {%
+      \pgftransformshift{\pgfpointadd{\northeast}{\pgfpoint{-0.4\pgf@xa}{-0.3\pgf@ya}}}
+      \pgftransformscale{0.5}
+      \pgfsetcolor{black}
+      \pgftext[left]{}
+    }
+    \pgfusepath{stroke}
+  }
+}
+\makeatother
+
+% \newcommand\centerofmass{%
+%   \tikz[radius=0.4em] {%
+%     \fill (0,0) -- ++(0.4em,0) arc [start angle=0,end angle=90] -- ++(0,-0.8em) arc [start angle=270, end angle=180];%
+%     \draw (0,0) circle;%
+%   }%
+% }
+
+\input{include/dimension-decorations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COMMANDS TO CALL DIMENSION DECORATIONS %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\Hdimension[1][]{\path[decorate,decoration={Hdim,#1}]}
+\newcommand\Vdimension[1][]{\path[decorate,decoration={Vdim,#1}]}
+\newcommand\dimension[1][]{\path[decorate,decoration={dim,#1}]}
+
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
+\def \myneq {\skew{-2}\not =} % \neq alone skews the dash
+
+\newcommand{\mx}[1]{\mathbf{\bm{#1}}}
+\newcommand{\vc}[1]{\mathbf{\bm{#1}}}
+\newcommand{\dsp}[1]{\displaystyle{#1}}
+\newcommand{\wbt}{\widetilde{\overline{\theta}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+  \input{diagrams/baseline}
+  \input{diagrams/baseline-input-sat}
+  \input{diagrams/guidance-loop-1}
+  \input{diagrams/guidance-loop-2}
+  \input{diagrams/guidance-loop-3}
+  \input{diagrams/adaptive-1}
+  \input{diagrams/adaptive-2}
+  \input{diagrams/adaptive-3}
+  \input{diagrams/adaptive-4}
+  \input{diagrams/adaptive-5}
+  \input{diagrams/adaptive-6}
+  \input{diagrams/block-001}
+  \input{diagrams/reference-adaptive-1}
+  \input{diagrams/adaptive-pitch-loop-1}
+  \input{diagrams/using-z-1}
+  \input{diagrams/new-structure-1}
+  \input{diagrams/pitch-rate-feedback-1}
+  \input{diagrams/altitude-control-1}
+  \input{diagrams/colored-satnode}
+  \input{diagrams/multiblock-1}
+  \input{diagrams/blue-block-1}
+  \input{diagrams/demo-block-1}
+  \input{diagrams/demo-block-2}
+  \input{diagrams/plot-1}
+  \input{diagrams/plot-2}
+  \input{diagrams/plot-3}
+  \input{diagrams/plot-4}
+  \input{diagrams/empty-matrix}
+  \input{diagrams/block-002}
+  \input{diagrams/controller-block-1}
+  \input{diagrams/controller-block-2}
+  \input{diagrams/controller-block-3}
+  \input{diagrams/general-mimo-diagram-1}
+  \input{diagrams/baseline-plus-adaptive-1}
+  \input{diagrams/baseline-plus-adaptive-2}
+  \input{diagrams/classical-mrac-1}
+  \input{diagrams/classical-mrac-2}
+
+  \input{diagrams/block-003}
+  \input{diagrams/block-004}
+  \input{diagrams/block-005}
+  \input{diagrams/block-006}
+  \input{diagrams/block-007}
+  \input{diagrams/block-008}
+  \input{diagrams/block-009}
+  \input{diagrams/block-010}
+
+  \input{diagrams/example-3}
+  \input{diagrams/example-3b}
+  \input{diagrams/example-3c}
+  \input{diagrams/example-3d}
+  \input{diagrams/example-4}
+
+  \input{diagrams/block-011}
+  \input{diagrams/block-012}
+  \input{diagrams/block-013}
+  \input{diagrams/block-014}
+  \input{diagrams/block-015}
+  \input{diagrams/block-016}
+  \input{diagrams/block-017}
+  \input{diagrams/block-018}
+  \input{diagrams/block-019}
+
+  \input{diagrams/block-020}
+  \input{diagrams/block-021}
+  \input{diagrams/block-022}
+  \input{diagrams/block-023}
+
+  \input{diagrams/hypersonic-cross-section-1}
+  \input{diagrams/hypersonic-cross-section-2}
+  \input{diagrams/hypersonic-cross-section-3}
+
+  \input{diagrams/cg-circle}
+
+  \input{diagrams/block-024}
+  \input{diagrams/block-025}
+  \input{diagrams/block-026}
+
+  \input{diagrams/nozzle}
+  \input{diagrams/ramjet-0}
+  \input{diagrams/ramjet-1}
+  \input{diagrams/ramjet-2}
+  \input{diagrams/ramjet-3}
+
+  \input{diagrams/brayton-ideal}
+  \input{diagrams/brayton-pv}
+
+  \input{diagrams/block-027}
+  \input{diagrams/block-028}
+  \input{diagrams/block-029}
+
+  \input{diagrams/block-030}
+  \input{diagrams/block-031}
+  \input{diagrams/block-032}
+  \input{diagrams/block-033}
+  \input{diagrams/block-034}
+  \input{diagrams/block-035}
+  \input{diagrams/block-036}
+  \input{diagrams/block-037}
+  \input{diagrams/block-038}
+  \input{diagrams/block-039}
+
+  \input{diagrams/block-040}
+  \input{diagrams/block-041}
+  \input{diagrams/block-042}
+  \input{diagrams/block-043}
+  \input{diagrams/block-044}
+  \input{diagrams/block-045}
+  \input{diagrams/block-046}
+  \input{diagrams/block-047}
+  \input{diagrams/block-048}
+  \input{diagrams/block-049}
+
+  \input{diagrams/block-050}
+  \input{diagrams/block-051}
+  \input{diagrams/block-052}
+  \input{diagrams/block-053}
+  \input{diagrams/block-054}
+  \input{diagrams/block-055}
+  \input{diagrams/block-056}
+  \input{diagrams/block-057}
+  \input{diagrams/block-058}
+  \input{diagrams/block-059}
+
+  \input{diagrams/block-060}
+  \input{diagrams/block-061}
+  \input{diagrams/block-062}
+  \input{diagrams/block-063}
+  \input{diagrams/block-064}
+  \input{diagrams/block-065}
+  \input{diagrams/block-066}
+  \input{diagrams/block-067}
+  \input{diagrams/block-068}
+  \input{diagrams/block-069}
+
+  \input{diagrams/block-070}
+  \input{diagrams/block-071}
+  \input{diagrams/block-072}
+  \input{diagrams/block-073}
+  \input{diagrams/block-074}
+  \input{diagrams/block-075}
+  \input{diagrams/block-076}
+  \input{diagrams/block-077}
+  \input{diagrams/block-078}
+  \input{diagrams/block-079}
+
+  \input{diagrams/block-080}
+  \input{diagrams/block-081}
+  \input{diagrams/block-082}
+  \input{diagrams/block-083}
+  \input{diagrams/block-084}
+  \input{diagrams/block-085}
+  \input{diagrams/block-086}
+  \input{diagrams/block-087}
+  \input{diagrams/block-088}
+  \input{diagrams/block-089}
+
+  \input{diagrams/block-090}
+  \input{diagrams/block-091}
+  \input{diagrams/block-092}
+  \input{diagrams/block-093}
+  \input{diagrams/block-094}
+  \input{diagrams/block-095}
+  \input{diagrams/block-096}
+  \input{diagrams/block-097}
+  \input{diagrams/block-098}
+  \input{diagrams/block-099}
+
+  \input{diagrams/block-100}
+  \input{diagrams/block-101}
+  \input{diagrams/block-102}
+  \input{diagrams/block-103}
+  \input{diagrams/block-104}
+  \input{diagrams/block-105}
+  \input{diagrams/block-106}
+  \input{diagrams/block-107}
+  \input{diagrams/block-108}
+  \input{diagrams/block-109}
+
+  \input{diagrams/block-110}
+  \input{diagrams/block-111}
+  \input{diagrams/block-112}
+  \input{diagrams/block-113}
+  \input{diagrams/block-114}
+  \input{diagrams/block-115}
+  \input{diagrams/block-116}
+  \input{diagrams/block-117}
+  \input{diagrams/block-118}
+  \input{diagrams/block-119}
+
+  \input{diagrams/block-120}
+  \input{diagrams/gravity-turn}
+
+\end{document}
+
+%\node [draw,circle ] (a) { Real label};
+%\node  at (block1.45) {$\bullet$};
+%\node [draw] at ([shift={(95:1)}]a.60) {Second label};
+%\node[tee,xshift=2.0cm] at (block1) {$\bullet$};
+%\node[draw] at (0,0) (left node) {Left Node};
+%\node[draw] at (3,2) (top node) {Top Node};
+% \draw [help lines] (0,-6) grid (15,5);
+%\node (A) at (2,1) {A};
+%\coordinate (A) at (3,2);
+%\coordinate (B) at ([xshift=-1.0cm,yshift=-1.0cm] A);
+%\node[draw] at (A) (left node) {A};
+%\node[draw] at (B) (left node) {B};
+% \draw[-](A) -- (B);

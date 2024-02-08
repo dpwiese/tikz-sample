@@ -1,0 +1,77 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}[x=1in, y=1in, >=latex, line join=round, font=\small,auto, scale=1.0, every node/.style={transform shape}, node distance=1.0in, >=latex']
+  % Constants: dimensions and geometry
+  \newcommand\betadeg{30}
+  \newcommand\mglen{1}
+  \newcommand\arcdist{0.2}
+
+  % Define colors for CG
+  \newcommand\cgradius{0.08}
+  \newcommand\cgfillcolor{black}
+  \newcommand\cglinecolor{black}
+
+  % Define inertial coordinates: origin
+  \coordinate (o)   at (0,0);
+
+  % Define inertial axes: x and y in positive and negative directions
+  \coordinate (xI)  at ($(o) + ( 3,  0)$);
+  \coordinate (yI)  at ($(o) + ( 0, -3)$);
+  \coordinate (nxI) at ($(o) + (-1,  0)$);
+  \coordinate (nyI) at ($(o) + ( 0,  1)$);
+
+  % Define inertial forces: gravity in negative y (inertial) axis
+  \coordinate (FyI) at ($(o) + (0, -\mglen)$);
+
+  % Place coordinates for everything in the body axes frame that will be rotated
+  \begin{scope}[rotate=\betadeg]
+    \coordinate (xT)    at ($(o) + (2, 0)$);
+    \coordinate (yT)    at ($(o) + (0, -2)$);
+    \coordinate (FxT)   at ($(o) + (1, 0)$);
+    \coordinate (nFxT)  at ($(o) + ({-\mglen*sin(\betadeg)}, 0)$);
+    \coordinate (FyT)   at ($(o) + (0, {-\mglen*cos(\betadeg)})$);
+    \coordinate (VxT)   at ($(o) + (1.5, 0)$);
+    \coordinate (arcxT) at ($(o) + (\arcdist, 0)$);
+  \end{scope}
+
+  % Draw lines: inertial axes
+  \draw[->, line width=0.5pt, gray]   (o) -- node[right, pos=1.0]{$x_{I}$}          (xI);
+  \draw[->, line width=0.5pt, gray]   (o) -- node[right, pos=1.0]{$y_{I}$}          (yI);
+
+  % Draw lines: "negative" inertial axes
+  \draw[-,  line width=0.5pt, gray, dash pattern=on 1pt off 3pt] (o) --             (nxI);
+  \draw[-,  line width=0.5pt, gray, dash pattern=on 1pt off 3pt] (o) --             (nyI);
+
+  % Draw lines: forces in inertial axes
+  \draw[->, line width=1.0pt, gray]   (o) -- node[right, pos=1.0]{$mg$}             (FyI);
+
+  % Draw lines: trajectory axes
+  \draw[->, line width=0.5pt, gray]   (o) -- node[right, pos=1.0]{$x_{T}$}          (xT);
+  \draw[->, line width=0.5pt, gray]   (o) -- node[right, pos=1.0]{$y_{T}$}          (yT);
+
+  % Draw lines: forces in trajectory axes
+  \draw[->, line width=2.0pt, black]  (o) -- node[right, pos=1.0]{$F$}              (FxT);
+  \draw[->, line width=2.0pt, black]  (o) -- node[left,  pos=1.0]{$mg\cos(\beta)$}  (nFxT);
+  \draw[->, line width=2.0pt, black]  (o) -- node[right, pos=1.0]{$mg\sin(\beta)$}  (FyT);
+
+  % Draw lines: velocity
+  \draw[->, line width=1.0pt, black]  (o) -- node[right, pos=1.0]{$v$}              (VxT);
+
+  % Draw lines: arcs
+  \draw[-, line width=0.5pt, gray]
+    (arcxT)
+    arc (\betadeg:90:\arcdist)
+    node[above, xshift=0.1in]{$\beta$}
+    ($(o) + (0, \arcdist)$);
+
+  % Place CG marker
+  \coordinate (cgtop) at ($(o)+(\cgradius,0)$);
+  \coordinate (cgbot) at ($(o)+(-\cgradius,0)$);
+  \filldraw[\cglinecolor,fill=\cgfillcolor] (o) -- (cgtop) arc (360:270:\cgradius);
+  \filldraw[\cglinecolor,fill=white]        (o) -- (cgtop) arc (0:90:\cgradius);
+  \filldraw[\cglinecolor,fill=\cgfillcolor] (o) -- (cgbot) arc (180:90:\cgradius);
+  \filldraw[\cglinecolor,fill=white]        (o) -- (cgbot) arc (180:270:\cgradius);
+  \draw[\cglinecolor] (o) circle (\cgradius);
+
+\end{tikzpicture}

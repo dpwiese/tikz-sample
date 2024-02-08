@@ -1,0 +1,71 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[>=stealth]
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (b1) at (0,6)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      \node at (b1) {\shortstack{Force \\ Equation}};
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (d) at (0,3)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (d) at (0,0)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (d) at (8,6)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (d) at (8,3)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      \matrix[matrix of math nodes,nodes in empty cells,draw] (d) at (8,0)
+      {
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+        & & & & & \\
+      };
+      % \matrix[matrix of math nodes,nodes in empty cells,draw,minimum width=30pt,below=of d] (y) 
+      % {
+      %   \\ \\ \\ \\ \\
+      % };
+      % \node at (y) {$D$};
+      
+      % \foreach \i in {1,2,3,4,5}
+      %  {
+      %  \draw[->] let \p1 = (d.west), \p2 = (d-\i-\i.west), \p3 = (y.west), \p4 = (y-\i-1.west) in (\x3,\y4) -| 
+      %    ++(-2.4+0.2*\i,1) |- (\x1,\y2);
+      %  \draw[->] let \p1 = (d.east), \p2 = (d-\i-\i.east), \p3 = (y.east), \p4 = (y-\i-1.east) in (\x1,\y2) -|
+      %    ++(1.6-0.2*\i,-1) |- (\x3,\y4);
+      %  }
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

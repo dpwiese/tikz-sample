@@ -1,0 +1,61 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{tikzpicture}[x=1mm, y=1mm,>=latex,line join=round,font=\small]
+  \coordinate (o) at (0,0);
+
+  % Upper part
+  \coordinate (A) at ($(o)+(0,0)$);
+  \coordinate (B) at ($(A)+(152,0)$);
+  \coordinate (C) at ($(B)+(-35,-12)$);
+  \coordinate (D) at ($(C)+(-35,0)$);
+  \coordinate (E) at ($(D)+(-16,4)$);
+
+  % Lower part
+  \coordinate (G) at ($(C)+(28,-10)$);
+  \coordinate (H) at ($(G)+(-45,2)$);
+  \coordinate (I) at ($(H)+(-25,0)$);
+  \coordinate (J) at ($(I)+(-10,2)$);
+  \coordinate (K) at ($(J)+(12,-4)$);
+  \coordinate (L) at ($(K)+(30,-1)$);
+
+  % Draw top
+  \draw[fill, pattern=section, line width=1.1pt]
+  (A)--
+  (B)--
+  (C)--
+  (D)--
+  (E)--
+  (A)
+  --cycle;
+
+  % Draw bottom
+  \draw[fill, pattern=section, line width=1.1pt]
+  (G)--
+  (H)--
+  (I)--
+  (J)--
+  (K)--
+  (L)--
+  (G)
+  --cycle;
+
+  % Shock lines
+  % \draw[red,ultra thick] (A) -- ($(J)+(6,-6)$);
+  \draw[red,ultra thick] (A) -- ($(J)+(-30,-6)$);
+  \draw[red,ultra thick] (J) -- ($(J)+(-66,8)$);
+  % \draw[red,ultra thick] (J) -- ($(J)+(-66,8)$);
+  % \draw[red,ultra thick] (J) -- ($(D)+(-8,3)$);
+  % \draw[red,ultra thick] ($(D)+(-8,3)$) -- ($(I)+(12,0)$);
+  % \draw[red,ultra thick] (I) -- ($(D)+(6,0)$);
+
+  % Dimensions
+  % \newif\ifdimension
+  % \dimensionfalse
+  % \newcount\Ndim=0
+  % \def\SeeDim#1{\ifdimension\global\advance\Ndim by 1 \the\Ndim\else#1\fi}
+  % \Hdimension[text=\SeeDim{Inlet}, distance=-40]  (A)--(D);
+  % \Hdimension[text=\SeeDim{Isolator}, distance=-28]  (D)--(H);
+  % \Hdimension[text=\SeeDim{Combustor}, distance=-28]  (H)--(C);
+  % \Hdimension[text=\SeeDim{Nozzle}, distance=-40]  (C)--(B);
+\end{tikzpicture}

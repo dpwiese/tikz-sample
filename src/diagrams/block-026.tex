@@ -1,0 +1,46 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=1.0, every node/.style={transform shape}, node distance=0.1cm, >=latex']
+      \node[squareblock, minimum height=2cm, minimum width=1cm] (block1){};
+
+      \matrix[ampersand replacement=\&, row sep=0.8cm, left of=block1,node distance=0.5cm] (block1in) {
+        \node [coordinate] (b1inA) {}; \\
+        \node [coordinate] (b1inB) {}; \\
+      };
+
+      \matrix[ampersand replacement=\&, row sep=0.8cm, right of=block1,node distance=0.5cm] (block1out) {
+        \node [coordinate] (b1outA) {}; \\
+        \node [coordinate] (b1outB) {}; \\
+      };
+
+      \node[input, left of=b1inA,node distance=1.5cm](input1){};
+      \node[input, left of=b1inB,node distance=1.5cm](input2){};
+      \node[roundblock,right of=b1outA, node distance=1.2cm, minimum height=0.8cm] (block2) {$J$};
+      \node[roundblock,right of=b1outB, node distance=1.2cm, minimum height=0.8cm] (block3) {$K$};
+      \node[roundblock,below of=block3, node distance=1.2cm, minimum height=0.8cm] (block4) {$B$};
+      \node[output,left of=block4, node distance=1.7cm](nodeB){};
+      \node[whitesum,right of=block3, node distance=1.5cm] (sum1) {};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, right of=sum1,node distance=2.5cm] (block5) {$\dsp{\frac{1}{s(Js+B)}}$};
+      \node[output, right of=block5,node distance=3.5cm] (output1) {};
+      \node[output, below of=block4,node distance=1.0cm](output2){};
+
+      \draw[->](input1) -- node[pos=0.2]{$\ddot{x}_{d}$} (b1inA);
+      \draw[->](input2) -- node[pos=0.2]{$x_{d}$} (b1inB);
+      \draw[->](b1outA) -- node[pos=0.5]{$e_{1}$} (block2);
+      \draw[->](b1outB) -- node[pos=0.5]{$e_{2}$} (block3);
+      \draw[->](block2) -| node[pos=0.9]{$+$}(sum1);
+      \draw[->](block3) -- node[pos=0.7]{$+$} (sum1);
+      \draw[->](block4) -| node[pos=0.9]{$+$} (sum1);
+      \draw[->](sum1) -- node[pos=0.5]{$\tau$} (block5);
+      \draw[->](block5) -- node[pos=0.5,name=x]{} (output1);
+      \draw[vecNoArrow](x) |- (output2);
+      \draw[vecArrow](output2) -| (nodeB);
+      \draw[->](nodeB) -| node[pos=0.9]{$x$} (block1);
+      \draw[->](nodeB) |- node[pos=0.9]{$\dot{x}$} (block4);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

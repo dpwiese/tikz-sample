@@ -1,0 +1,40 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[tee, right of= input1, node distance=1.0cm](tee2){};
+      \node[tee, above of= tee2, node distance=1.0cm](tee3){};
+      \node[tee, below of= tee2, node distance=1.0cm](tee4){};
+      \node[whitesum, right of= tee4, node distance=1.0cm](sum2){};
+      \node[tee, below of= sum2, node distance=2.0cm](tee9){};
+      \node[squareblock, right of=sum2,label=above:{Plant},node distance=2.0cm] (block2){$\frac{1}{s-1}$};
+      \node[squareblock, above of=block2,label=above:{Reference Model},node distance=2.0cm] (block1){$\frac{1}{s+1}$};
+      \node[roundblock, below of=block2,node distance=2.0cm] (block3){$\theta$};
+      \node[tee, right of= block1, node distance=3.0cm](tee5){};
+      \node[tee, right of= block2, node distance=2.0cm](tee6){};
+      \node[tee, right of= tee6, node distance=1.0cm](tee7){};
+      \node[tee, below of= tee6, node distance=2.0cm](tee8){};
+      \node[whitesum, right of= tee2,node distance=6.0cm](sum1){};
+      \node[input, right of= sum1, node distance=1.5cm](input5){};
+      \draw[-](input1) -- node[near start]{$r$} node[pos=0.7] {} (tee2);
+      \draw[-](tee2) -- (tee3);
+      \draw[-](tee2) -- (tee4);
+      \draw[->](tee3) -- (block1);
+      \draw[->](tee4) -- node[near end] {$+$} (sum2);
+      \draw[->](sum2) -- (block2);
+      \draw[-](block3) -- (tee9);
+      \draw[->](tee9) -- node[near end] {$+$} (sum2);
+      \draw[->](tee5) -- node[pos=0.9] {$-$} (sum1);
+      \draw[-](tee6) -- (tee7);
+      \draw[->](tee7) -- node[pos=0.9] {$+$} (sum1);
+      \draw[-](block1) -- node[near start]{$x_{m}$} node[near end] {} (tee5);
+      \draw[-](block2) -- node[near start]{$x_{p}$} node[near end] {} (tee6);
+      \draw[-](tee6) -- (tee8);
+      \draw[->](tee8) -- (block3);
+      \draw[->](sum1) -- node[near end] {$e$} (input5);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

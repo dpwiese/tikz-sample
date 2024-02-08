@@ -1,0 +1,30 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[tee, right of= input1,node distance=1.5cm](tee2){};
+      \node[tee, above of= tee2,node distance=1.2cm](tee3){};
+      \node[tee, below of= tee2,node distance=1.2cm](tee4){};
+      \node[roundblock, right of=tee3,label=above:{},node distance=2.0cm] (block1){$\theta$};
+      \node[roundblock, right of=tee4,label=above:{},node distance=2.0cm] (block2){$\hat{\theta}$};
+      \node[output, right of= block1](output1){};
+      \node[output, right of= block2](output2){};
+      \node[input, right of= output1](input3){};
+      \node[input, right of= output2](input4){};
+      \node[whitesum, below of= input3,node distance=1.2cm](sum1){};
+      \node[input, right of= sum1, node distance=1.5cm](input5){};
+      \draw[vecNoArrow](input1) -- node[near start]{$u$} node[pos=0.7] {} (tee2);
+      \draw[vecArrow](tee2) |- (block1);
+      \draw[vecArrow](tee2) |- (block2);
+      \draw[->](block1) -| node[pos=0.4] {$y$} node[pos=0.9] {$-$} (sum1);
+      \draw[->](block2) -| node[pos=0.4] {$\hat{y}$} node[pos=0.9, right] {$+$} (sum1);
+      \draw[->](sum1) -- node[near end] {$e$} (input5);
+      \draw[innerWhite](input1) -- (tee2);
+      \draw[innerWhite](tee2) |- (block1);
+      \draw[innerWhite](tee2) |- (block2);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

@@ -1,0 +1,17 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[->] (0,0) -- (8,0) node[anchor=north] {};
+      \draw
+      (0,0) node[anchor=north] {800}
+      (4,0) node[anchor=north] {\shortstack{Dynamic \\ Pressure [psf]}}
+      (8,0) node[anchor=north] {2000};
+      \draw[->] (0,0) -- (0,4) node[anchor=east] {};
+      % \draw (1,1.5) node[mark=square*, mark options={fill=white}] {}; 
+      \draw [cyan] plot [only marks, mark=square*] coordinates {(1,1) (2,3) (2.5,2)};
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

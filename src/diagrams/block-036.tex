@@ -1,0 +1,14 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[roundblock, right of=input1,label=above:{},node distance=2.0cm] (block1){$\theta^{\top}$};
+      \node[output, right of= block1,node distance=2.0cm](output1){};
+      \draw[vecArrow](input1) -- node[near start]{$u(t)$} node[pos=0.9] {} (block1);
+      \draw[->](block1) -- node[near start]{} node[near end] {$y(t)$} (output1);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

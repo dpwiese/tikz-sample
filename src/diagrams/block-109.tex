@@ -1,0 +1,21 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{center}
+  \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+    \node[input](input1){};
+    \node[squareblock, right of=input1,label=below:{$a_{m}<0$},label=above:{Reference Model},node distance=2.0cm] (block1){\fontsize{16pt}{16pt}\selectfont$\frac{k_{m}}{s-a_{m}}$};
+    \node[squareblock, below of=block1,label=above:{Plant},node distance=2.4cm] (block2){\fontsize{16pt}{16pt}\selectfont$\frac{k_{p}}{s-a_{p}}$};
+    \node[input, left of=block2, node distance=2.0cm](input2){};
+    \node[tee, below of= input1, node distance=1.2cm](notee){};
+    \node[whitesum, right of= notee, node distance=4.0cm](sum1){};
+    \node[output, right of=sum1, node distance=1.5cm](output1){};
+
+    % Draw
+    \draw[-](input1) -- node[near start]{$r$} (block1);
+    \draw[-](input2) -- node[near start]{$u$} (block2);
+    \draw[->](block1) -| node[pos=0.5] {$x_{m}$} node[pos=0.8, left] {$-$} (sum1);
+    \draw[->](block2) -| node[pos=0.5, right] {$x_{p}$} node[pos=0.8]{$+$} (sum1);
+    \draw[->](sum1) -- node[near end]{$e$} (output1);
+  \end{tikzpicture}
+\end{center}

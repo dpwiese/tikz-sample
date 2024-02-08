@@ -1,0 +1,25 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.9, every node/.style={transform shape}, node distance=1.0cm, >=latex']
+      \node[input](input1){};
+      \node[squareblock, right of=input1,node distance=4.0cm] (block1){$\dot{X}_{m}=A_{m}X_{m}+b_{m}r$};
+      \node[squareblock, below of=block1,node distance=2.0cm] (block2){$\dot{X}_{p}=A_{p}X_{p}+b_{p}u$};
+      \node[whitesum, left of=block2, node distance=3.0cm](sum1){$+$};
+      \node[input, left of=sum1, node distance=1.0cm](input2){};
+      \node[input, below of=sum1, node distance=1.0cm](input3){};
+      \node[output, right of=block1, node distance=3.5cm](output1){};
+      \node[output, right of=block2, node distance=3.5cm](output2){};
+
+      % Draw
+      \draw[->](input1) -- node[near start]{$r$} (block1);
+      \draw[->](input2) -- (sum1);
+      \draw[->](input3) -- (sum1);
+      \draw[->](sum1) -- node[near start]{$u$} (block2);
+      \draw[vecArrow](block1) -- node[pos=0.5] {$X_{m}$} (output1);
+      \draw[vecArrow](block2) -- node[pos=0.5] {$X_{p}$} (output2);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}

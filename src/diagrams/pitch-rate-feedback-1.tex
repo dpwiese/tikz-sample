@@ -1,0 +1,153 @@
+\clearpage
+\section*{\currfilename}
+
+\begin{figure}[H]
+  \fontsize{14pt}{14pt}\selectfont
+  \begin{center}
+    \begin{tikzpicture}[auto, scale=0.5, every node/.style={transform shape}, node distance=0.1cm, >=latex']
+      \node[input](input00){};
+      \node[input,right of=input00, node distance = 2.0cm](input01){};
+      \node[input, above of=input01, node distance = 5.5cm](input1){};
+      \node[gainblockright,right of=input1, node distance=3.0cm, minimum height=0.1cm, minimum width=1.0cm] (block1) {$K_{q_{\text{cmd}}}$};
+      \node[whitesum,right of=block1, node distance=2.5cm] (sum1) {};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, right of=sum1,node distance=2.5cm] (block2) {\shortstack{Nominal short \\ period}};
+      \node[output, right of=block2,node distance=2.5cm] (output1) {};
+      \node[output, right of=output1,node distance=1.0cm] (output2) {};
+      \node[output, right of=output2,node distance=1.5cm] (output3) {};
+      \node[gainblockleft, above of=block2,node distance=2.0cm, minimum width=1.0cm](block3){\rotatebox{180}{$K_{\alpha}$}};
+      \node[gainblockleft, above of=block3,node distance=2.0cm, minimum width=1.0cm](block4){\rotatebox{180}{$K_{q}$}};
+      \node[gainblockright, minimum height=1cm, minimum width=2cm, left of=input1,node distance=3.5cm] (block5) {$K_{}$};
+      \node[whitesum,left of=block5, node distance=2.0cm] (sum2) {};
+      \node[input,left of=sum2, node distance=3.0cm] (input2) {};
+      \node[squareblock, minimum height=1cm, minimum width=1.0cm, right of=output3,node distance=1.0cm] (block6) {$\frac{1}{s}$};
+      \node[output, right of=block6,node distance=1.5cm] (output4) {};
+      \node[output, right of=output4,node distance=2.5cm] (output5) {};
+      \node[input, below of=block4,node distance=2.5cm] (input3) {};
+      %\draw[->](input1) -- node[pos=0.4]{$q_{\text{cmd}}$} (block1);
+      \draw[->](block1) -- (sum1);
+      % \draw[->](sum1) -- node[pos=0.5]{$\delta_{e}$}(block2);
+      \draw[->](sum1) -- (block2);
+      % \draw[vecArrow](block2) -- node[pos=0.5]{$q$}(block6);
+      \draw[->](block2) -- node[pos=0.8]{$q_{m}$}(block6);
+      \draw[->](output1) |- (block3);
+      \draw[->](output2) |- (block4);
+      \draw[->](block3) -| (sum1);
+      \draw[->](block4) -| (sum1);
+      \draw[->](input2) -- node[pos=0.2]{$z_{\text{cmd}}$} (sum2);
+      \draw[->](sum2) -- (block5);
+      % \draw[->](block5) -- node[pos=0.3]{$q_{\text{cmd}}$} (block1);
+      \draw[->](block5) -- node[pos=0.3, name=r, anchor=west]{} node[pos=0.3]{$r$} (block1);
+      \draw[-](output4) |- (input3);
+      \draw[->](input3) -| (sum2);
+      \draw[-](block6) -- node[pos=0.8]{$z_{m}$} (output5);
+
+      % Dotted line around
+      \begin{pgfonlayer}{background}
+      \path (sum2 |- sum2)+(-1.5,1.7) node (c) {};
+      \path (block6 -| block6)+(2.5,-7.2) node (d) {};
+      \path[fill=gray!20,draw, dashed] (c) rectangle (d);
+      \end{pgfonlayer}
+
+      % Dotted line around short period
+      \begin{pgfonlayer}{background}
+      \path (block1 |- block1)+(-1.5,1.2) node (c) {};
+      \path (block4 -| block4)+(4.0,-1.2) node (d) {};
+      \path[fill=gray!40,draw, dashed] (c) rectangle (d);
+      \end{pgfonlayer}
+
+      \node[input, below of=input01, node distance = 5.5cm](input1a){};
+      \node[gainblockright,right of=input1a, node distance=3.0cm, minimum height=0.1cm, minimum width=1.0cm] (block1a) {$\Theta_{q_{\text{cmd}}}$};
+      \node[whitesum,right of=block1a, node distance=2.5cm] (sum1a) {};
+      \node[squareblock, minimum height=1cm, minimum width=2cm, right of=sum1a,node distance=2.5cm] (block2a) {\shortstack{Uncertain short \\ period}};
+      \node[output, right of=block2a,node distance=2.5cm] (output1a) {};
+      \node[output, right of=output1a,node distance=1.0cm] (output2a) {};
+      \node[output, right of=output2a,node distance=1.5cm] (output3a) {};
+      \node[gainblockleft, above of=block2a,node distance=2.0cm, minimum width=1.0cm](block3a){\rotatebox{180}{$\Theta_{\alpha}$}};
+      \node[gainblockleft, above of=block3a,node distance=2.0cm, minimum width=1.0cm](block4a){\rotatebox{180}{$\Theta_{q}$}};
+      %\node[gainblockright, minimum height=1cm, minimum width=2cm, left of=input1a,node distance=1.5cm] (block5a) {$\Theta_{\theta}$};
+      \node[whitesum, below of=r,node distance=11.0cm] (block5a) {};
+      %\node[whitesum,left of=block5a, node distance=2.0cm] (sum2a) {};
+      \node[input,left of=block5a, node distance=2.0cm] (sum2a) {};
+      \node[input,left of=sum2a, node distance=3.0cm] (input2a) {};
+      \node[squareblock, minimum height=1cm, minimum width=1.0cm, right of=output3a,node distance=1.0cm] (block6a) {$\frac{1}{s}$};
+      \node[output, right of=block6a,node distance=1.5cm] (output4a) {};
+      \node[output, right of=output4a,node distance=2.5cm] (output5a) {};
+      \node[input, below of=block4a,node distance=2.5cm] (input3a) {};
+      %\draw[->](input1) -- node[pos=0.4]{$q_{\text{cmd}}$} (block1);
+      \draw[->](block1a) -- (sum1a);
+      \draw[->](sum1a) -- node[pos=0.5]{$\delta_{e}$}(block2a);
+      \draw[->](block2a) -- node[pos=0.8]{$q$}(block6a);
+      \draw[->](output1a) |- (block3a);
+      \draw[->](output2a) |- (block4a);
+      \draw[->](block3a) -| (sum1a);
+      \draw[->](block4a) -| (sum1a);
+      %\draw[->](input2a) -- node[pos=0.2]{$\theta_{\text{cmd}}$} (sum2a);
+      %\draw[->](sum2a) -- (block5a);
+      \draw[->](block5a) -- node[pos=0.3]{$q_{\text{cmd}}$} (block1a);
+      %\draw[-](output4a) |- (input3a);
+      %\draw[->](input3a) -| (sum2a);
+      \draw[-](block6a) -- node[pos=0.8]{$z$} (output5a);
+      %
+      %
+      \draw[->](r.center) -- node[pos=0.9]{$+$} (block5a);
+      %
+      %
+      %% Dotted line around
+      %\begin{pgfonlayer}{background}
+      %\path (sum2a |- sum2a)+(-1.5,1.7) node (c) {};
+      %\path (block6a -| block6a)+(2.5,-7.2) node (d) {};
+      %\path[fill=gray!20,draw, dashed] (c) rectangle (d);
+      %\end{pgfonlayer}
+
+      % Dotted line around short period
+      \begin{pgfonlayer}{background}
+      \path (block1a |- block1a)+(-1.5,1.2) node (c) {};
+      \path (block4a -| block4a)+(4.0,-1.2) node (d) {};
+      \path[fill=gray!40,draw, dashed] (c) rectangle (d);
+      \end{pgfonlayer}
+
+      % Adaptive Arrow
+      \coordinate (arrow1a) at ([xshift=-1.0cm,yshift=-1.0cm] block1a);
+      \coordinate (arrow2a) at (block1a.225);
+      \coordinate (arrow3a) at (block1a.45);
+      \coordinate (arrow4a) at ([xshift=1.0cm,yshift=1.0cm] block1a);
+      \draw[-](arrow1a) -- (arrow2a);
+      \draw[->](arrow3a) -- (arrow4a);
+
+      % Adaptive Arrow
+      \coordinate (arrow1a) at ([xshift=-1.0cm,yshift=-1.0cm] block3a);
+      \coordinate (arrow2a) at (block3a.225);
+      \coordinate (arrow3a) at (block3a.45);
+      \coordinate (arrow4a) at ([xshift=1.0cm,yshift=1.0cm] block3a);
+      \draw[-](arrow1a) -- (arrow2a);
+      \draw[->](arrow3a) -- (arrow4a);
+
+      % Adaptive Arrow
+      \coordinate (arrow1a) at ([xshift=-1.0cm,yshift=-1.0cm] block4a);
+      \coordinate (arrow2a) at (block4a.225);
+      \coordinate (arrow3a) at (block4a.45);
+      \coordinate (arrow4a) at ([xshift=1.0cm,yshift=1.0cm] block4a);
+      \draw[-](arrow1a) -- (arrow2a);
+      \draw[->](arrow3a) -- (arrow4a);
+
+      % Adaptive Arrow
+      %\coordinate (arrow1a) at ([xshift=-1.0cm,yshift=-1.0cm] block5a);
+      %\coordinate (arrow2a) at (block5a.225);
+      %\coordinate (arrow3a) at (block5a.45);
+      %\coordinate (arrow4a) at ([xshift=1.0cm,yshift=1.0cm] block5a);
+      %\draw[-](arrow1a) -- (arrow2a);
+      %\draw[->](arrow3a) -- (arrow4a);
+
+      \node[gainblockleft, above of=block2a,node distance=2.0cm, minimum width=1.0cm](block3a){\rotatebox{180}{$\Theta_{\alpha}$}};
+      \node[gainblockleft, above of=block3a,node distance=2.0cm, minimum width=1.0cm](block4a){\rotatebox{180}{$\Theta_{q}$}};
+      \node[whitesum,below of=output5, node distance=5.5cm] (output6) {};
+      \draw[->](output5) -- (output6);
+      \draw[->](output5a) -- (output6);
+      \node[output,right of=output6, node distance=2.5cm] (output7) {};
+      \draw[->](output6) -- node[pos=0.3]{$e_{z}$} node[pos=0.5, name=ez]{}(output7);
+      \node[output,below of=block4a, node distance=2.5cm] (output8) {};
+      \draw[-](ez) |- (output8);
+      \draw[->](output8) -| node[pos=0.9]{$-$} (block5a);
+    \end{tikzpicture}
+  \end{center}
+\end{figure}
