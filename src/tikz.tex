@@ -40,7 +40,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION PATTERN DEFINITION %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newlength\thickness
+\newlength\thickness%
 \pgfdeclarepatternformonly[\thickness]{section}
 {\pgfpointorigin}
 {\pgfpoint{1cm}{1cm}}
@@ -49,11 +49,11 @@
 \pgfsetlinewidth{\thickness}
 \pgfpathmoveto{\pgfpoint{0cm}{0cm}}
 \pgfpathlineto{\pgfpoint{1cm}{1cm}}
-\pgfpathclose
+\pgfpathclose%
 \pgfsetlinewidth{\thickness}
 \pgfpathmoveto{\pgfpoint{0cm}{.5cm}}
 \pgfpathlineto{\pgfpoint{.5cm}{1cm}}
-\pgfpathclose
+\pgfpathclose%
 \pgfsetlinewidth{\thickness}
 \pgfpathmoveto{\pgfpoint{.5cm}{0cm}}
 \pgfpathlineto{\pgfpoint{1cm}{.5cm}}
@@ -78,7 +78,7 @@
 \tikzstyle{sum} = [draw, circle, node distance=1cm]
 \tikzstyle{modelinput} = [coordinate]
 \tikzstyle{modeloutput} = [coordinate]
-\tikzstyle {regionoutput} = [coordinate]
+\tikzstyle{regionoutput} = [coordinate]
 \tikzstyle{gainblockleft} = [draw, fill=white!50, isosceles triangle,sharp corners, anchor=center, minimum height=0.5cm, minimum width=2cm,rotate=180]
 \tikzstyle{gainblockright} = [draw, fill=white!50, isosceles triangle,sharp corners, anchor=center, minimum height=0.5cm, minimum width=2cm]
 \tikzstyle{smoothblock}=[draw, fill=blue!50, rectangle, minimum height=1cm, minimum width=2cm, rounded corners=0.5mm, inner sep= 2mm]
@@ -103,13 +103,13 @@
   \inheritsavedanchors[from={rectangle}]
   \inheritbackgroundpath[from={rectangle}]
   \inheritanchorborder[from={rectangle}]
-  \foreach \x in {center,north east,north west,north,south,south east,south west}{%
+  \foreach\x in {center,north east,north west,north,south,south east,south west}{%
     \inheritanchor[from={rectangle}]{\x}
   }
   \foregroundpath{%
     \pgfpointdiff{\northeast}{\southwest}
-    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
-    \northeast
+    \pgf@xa=\pgf@x\pgf@ya=\pgf@y%
+    \northeast%
     \pgfpathmoveto{\pgfpoint{0}{0.45\pgf@ya}}
     \pgfpathlineto{\pgfpoint{0}{-0.45\pgf@ya}}
     \pgfpathmoveto{\pgfpoint{0.45\pgf@xa}{0}}
@@ -146,7 +146,7 @@
 \newcommand\dimension[1][]{\path[decorate,decoration={dim,#1}]}
 
 \renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
-\def \myneq {\skew{-2}\not =} % \neq alone skews the dash
+\def\myneq{\skew{-2}\not=} % \neq alone skews the dash
 
 \newcommand{\mx}[1]{\mathbf{\bm{#1}}}
 \newcommand{\vc}[1]{\mathbf{\bm{#1}}}
